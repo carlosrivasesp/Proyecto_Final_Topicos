@@ -1,0 +1,119 @@
+/* Estilos generales */
+.signup-container {
+    max-width: 500px;
+    margin: 2rem auto;
+    padding: 2rem;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.signup-title {
+    text-align: center;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+    color: #333;
+}
+
+  /* Estilo para los campos del formulario */
+.form-label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #333;
+}
+
+.form-control, .form-select {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    margin-bottom: 0.5rem;
+    background-color: #f9f9f9;
+}
+
+.form-control:focus, .form-select:focus {
+    outline: none;
+    border-color: #666;
+    background-color: white;
+}
+
+  /* Estilo para los checkboxes */
+.form-check {
+    margin: 1rem 0;
+    display: flex;
+    align-items: center;
+}
+
+.form-check-input {
+    margin-right: 0.5rem;
+}
+
+  /* Estilo para el botón */
+.btn-signup {
+    background-color: #10401b;
+    border-color: #28a745; 
+    padding: 0.75rem;
+    font-weight: 500;
+    margin-top: 1rem;
+}
+
+.btn-signup:hover {
+    background-color: #5cb85c; 
+    border-color: #5cb85c;   
+}
+
+  /* Estilo para los enlaces */
+.login-link a {
+    color: #333;
+    font-weight: 500;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+  /* Estilo para los mensajes de error */
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.875rem;
+    margin-top: -0.5rem;
+    margin-bottom: 1rem;
+}
+
+.is-invalid {
+    border-color: #dc3545;
+}
+
+
+.separator {
+    display: flex;
+    align-items: center;
+    text-align: center;
+    margin: 1.5rem 0;
+    color: #666;
+}
+
+.separator::before, .separator::after {
+    content: "";
+    flex: 1;
+    border-bottom: 1px solid #ddd;
+}
+
+.separator::before {
+    margin-right: 1rem;
+}
+
+.separator::after {
+    margin-left: 1rem;
+}
+
+.social-login {
+    text-align: center;
+    margin-top: 1.5rem;
+}
+
+.disabled{
+    opacity: 0.6;
+    cursor: not-allowed;
+}

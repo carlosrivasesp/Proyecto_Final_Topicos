@@ -1,0 +1,240 @@
+<app-header />
+<app-sidebar />
+
+<main class="main-content">
+  <div class="separador">
+    <p class="title">Listado de productos</p>
+
+    <div class="filter">
+      <div class="group1">
+        <p class="description">Filtrar por: </p>
+
+        <div class="dropdown">
+          <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+            {{ selectedFilter | uppercase }}
+          </button>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" (click)="selectedFilter = 'nombre'">Nombre</a></li>
+            <li><a class="dropdown-item" (click)="selectedFilter = 'Cod. Int'">Cod. Int</a></li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="group2">
+        <div class="input-group">
+          <input type="text" class="form-control" [(ngModel)]="searchTerm" placeholder="Buscar">
+          <span class="input-group-text"><i class="bi bi-search"></i></span>
+        </div>
+      </div>
+
+      <div class="group3">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAdd"
+          (click)="resetFormulario()">
+          <i class="bi bi-plus"></i>
+        </button>
+      </div>
+
+    </div>
+
+
+    <table class="table">
+      <thead>
+        <tr class="header">
+          <th scope="col" style="width: 90px;">Codigo</th>
+          <th scope="col" style="width: 370px;">Nombre</th>
+          <th scope="col" style="width: 80px;">Precio</th>
+          <th scope="col" style="width: 100px;">Stock Actual</th>
+          <th scope="col" style="width: 100px;">Stock Min.</th>
+          <th scope="col" style="width: 170px;">Categoria</th>
+          <th scope="col" style="width: 110px;">Marca</th>
+          <th scope="col" style="width: 100px;">Estado</th>
+          <th scope="col" style="width: 80px;">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="body">
+        <tr *ngFor="let prod of paginated">
+          <td>{{prod.codInt}}</td>
+          <td>{{prod.nombre}}</td>
+          <td>S/ {{prod.precio}}</td>
+          <td>{{prod.stockActual}}</td>
+          <td>{{prod.stockMin}}</td>
+          <td>{{prod.categoria.nombre}}</td>
+          <td>{{prod.marca.nombre}}</td>
+          <td>{{prod.estado}}</td>
+          <td>
+            <a class="actions" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <button><i class="bi bi-three-dots-vertical"></i></button>
+            </a>
+
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalEdit"
+                  (click)="editarProducto(prod)">Editar</a></li> <!--href="#"-->
+              <li><a class="dropdown-item" (click)="eliminarProducto(prod._id)">Eliminar</a></li>
+              <!-- data-bs-toggle="modal" data-bs-target="#modalDelete" -->
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <nav *ngIf="totalPages > 1" class="mt-3" aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <a class="page-link" (click)="changePage(currentPage - 1)">Anterior</a>
+        </li>
+        <li class="page-item"
+            *ngFor="let page of [].constructor(totalPages); let i = index"
+            [class.active]="currentPage === i + 1">
+          <a class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <a class="page-link" (click)="changePage(currentPage + 1)">Siguiente</a>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- MODAL REGISTRAR PRODUCTO -->
+
+    <div class="modal fade modal-lg" id="modalAdd" tabindex="-1" aria-labelledby="modalAdd" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="modalAdd">Registrar Producto</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form class="row g-3" [formGroup]="productoForm" (ngSubmit)="registrarProducto()">
+              <div class="col-md-6">
+                <label for="inputCodInt" class="form-label">Codigo Interno</label>
+                <input type="text" class="form-control" id="inputCodInt" formControlName="codInt">
+                <div class="text-danger"
+                  *ngIf="productoForm.get('codInt')?.hasError('required') && productoForm.get('codInt')?.touched">
+                  <span>Debe ingresar el código interno</span>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label for="inputProducto" class="form-label">Producto</label>
+                <input type="text" class="form-control" id="inputProducto" formControlName="nombre">
+                <div class="text-danger"
+                  *ngIf="productoForm.get('nombre')?.hasError('required') && productoForm.get('nombre')?.touched">
+                  <span>Debe ingresar el nombre del producto</span>
+                </div>
+              </div>
+              <div class="col-12">
+                <label for="inputPrecio" class="form-label">Precio</label>
+                <input type="text" class="form-control" id="inputPrecio" formControlName="precio">
+                <div class="text-danger"
+                  *ngIf="productoForm.get('precio')?.hasError('required') && productoForm.get('precio')?.touched">
+                  <span>Debe ingresar el precio</span>
+                </div>
+              </div>
+              <!-- Categoría -->
+              <div class="col-md-6">
+                <label for="inputCategoria" class="form-label">Categoría</label>
+                <select class="form-control" id="inputCategoria" formControlName="categoria">
+                  <option value="">Seleccione una categoría</option>
+                  <option *ngFor="let cat of listCategorias" [value]="cat._id">
+                    {{ cat.nombre }}
+                  </option>
+                </select>
+              </div>
+
+              <!-- Marca -->
+              <div class="col-md-6">
+                <label for="inputMarca" class="form-label">Marca</label>
+                <select class="form-control" id="inputMarca" formControlName="marca">
+                  <option value="">Seleccione una marca</option>
+                  <option *ngFor="let m of listMarcas" [value]="m._id">
+                    {{ m.nombre }}
+                  </option>
+                </select>
+              </div>
+
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                  (click)="resetFormulario()">Cancelar</button>
+                <button type="submit" [disabled]="productoForm.invalid" class="btn btn-success"
+                  data-bs-dismiss="modal">Registrar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL EDITAR -->
+
+  <div class="modal fade modal-lg" id="modalEdit" tabindex="-1" aria-labelledby="modalEdit" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modalEdit">Modificar datos</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="row g-3" [formGroup]="productoForm">
+            <div class="col-md-6">
+              <label for="inputCodInt" class="form-label">Codigo Interno</label>
+              <input type="text" class="form-control" id="inputCodInt" formControlName="codInt">
+            </div>
+            <div class="col-md-6">
+              <label for="inputProducto" class="form-label">Producto</label>
+              <input type="text" class="form-control" id="inputProducto" formControlName="nombre">
+
+            </div>
+            <div class="col-6">
+              <label for="inputPrecio" class="form-label">Precio</label>
+              <input type="text" class="form-control" id="inputPrecio" formControlName="precio">
+            </div>
+            <div class="col-6">
+              <label for="inputEstado" class="form-label">Estado</label>
+                      <select id="inputEstado" class="form-select" formControlName="estado">
+                        <option selected>Activo</option>
+                        <option>Descontinuado</option>
+                      </select>
+            </div>
+            <div class="col-md-6">
+              <label for="inputStock" class="form-label">Stock</label>
+              <input type="text" class="form-control" id="inputStock" formControlName="stockActual">
+            </div>
+            <div class="col-md-6">
+              <label for="inputStockMin" class="form-label">Stock Min</label>
+              <input type="text" class="form-control" id="inputStockMin" formControlName="stockMin">
+            </div>
+
+            <!-- Categoría -->
+            <div class="col-md-6">
+              <label for="inputCategoria" class="form-label">Categoría</label>
+              <select class="form-control" id="inputCategoria" formControlName="categoria">
+                <option *ngFor="let cat of listCategorias" [value]="cat._id">
+                  {{ cat.nombre }}
+                </option>
+              </select>
+            </div>
+
+            <!-- Marca -->
+            <div class="col-md-6">
+              <label for="inputMarca" class="form-label">Marca</label>
+              <select class="form-control" id="inputMarca" formControlName="marca">
+                <option *ngFor="let m of listMarcas" [value]="m._id">
+                  {{ m.nombre }}
+                </option>
+              </select>
+            </div>
+
+
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                (click)="resetFormulario()">Cancelar</button>
+              <button type="button" class="btn btn-success" (click)="actualizarProducto()"
+                data-bs-dismiss="modal">Aceptar</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>

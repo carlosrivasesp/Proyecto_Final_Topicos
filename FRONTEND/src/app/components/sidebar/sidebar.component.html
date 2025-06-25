@@ -1,0 +1,141 @@
+<div class="sidebar">
+    <nav class="nav flex-column">
+      <div class="body">
+  
+        <!-- dashboard -->
+        <a class="nav-link" routerLink="/dashboard" (click)="setActiveLink('dashboard')"
+           [ngClass]="{ 'active': activeLink === 'dashboard' }">
+          <span class="icon"><i class="bi bi-grid"></i></span>
+          <span class="description fw-bold">Dashboard</span>
+        </a>
+  
+        <!-- VENTAS -->
+        <a class="nav-link" (click)="toggleSubmenu('submenu1')">
+          <span class="icon"><i class="bi bi-minecart"></i></span>
+          <span class="description fw-bold">Ventas <i class="bi bi-caret-down-fill"></i></span>
+        </a>
+        <div class="sub-menu" id="submenu1" [ngClass]="{ 'collapse': openSubmenu !== 'submenu1' }">
+          <a class="nav-link" routerLink="/ventas" (click)="setActiveLink('nuevo-comprobante')"
+             [ngClass]="{ 'active': activeLink === 'nuevo-comprobante' }">
+            <i class="bi bi-dash"></i> Nuevo comprobante
+          </a>
+          <a class="nav-link" routerLink="/comprobantes" (click)="setActiveLink('listado-comprobantes')"
+             [ngClass]="{ 'active': activeLink === 'listado-comprobantes' }">
+            <i class="bi bi-dash"></i> Listado de comprobantes
+          </a>
+          <a class="nav-link" routerLink="/pagos-pendientes" (click)="setActiveLink('pagos-pendientes')"
+             [ngClass]="{ 'active': activeLink === 'pagos-pendientes' }">
+            <i class="bi bi-dash"></i> Pagos pendientes
+          </a>
+        </div>
+  
+        <!-- COTIZACIONES -->
+        <a class="nav-link" (click)="toggleSubmenu('submenu2')">
+          <span class="icon"><i class="bi bi-file-earmark-plus"></i></span>
+          <span class="description fw-bold">Cotizaciones <i class="bi bi-caret-down-fill"></i></span>
+        </a>
+        <div class="sub-menu" id="submenu2" [ngClass]="{ 'collapse': openSubmenu !== 'submenu2' }">
+          <a class="nav-link" routerLink="/new-cotizaciones" (click)="setActiveLink('nueva-cotizacion')"
+             [ngClass]="{ 'active': activeLink === 'nueva-cotizacion' }">
+            <i class="bi bi-dash"></i> Nueva cotización
+          </a>
+          <a class="nav-link" routerLink="/lista-cotizaciones" (click)="setActiveLink('listado-cotizaciones')"
+             [ngClass]="{ 'active': activeLink === 'listado-cotizaciones' }">
+            <i class="bi bi-dash"></i> Listado
+          </a>
+        </div>
+  
+        <!-- PRODUCTOS -->
+        <a class="nav-link" (click)="toggleSubmenu('submenu3')">
+          <span class="icon"><i class="bi bi-backpack4"></i></span>
+          <span class="description fw-bold">Productos / Servicios <i class="bi bi-caret-down-fill"></i></span>
+        </a>
+        <div class="sub-menu" id="submenu3" [ngClass]="{ 'collapse': openSubmenu !== 'submenu3' }">
+          <a class="nav-link" routerLink="/productos" (click)="setActiveLink('productos')"
+             [ngClass]="{ 'active': activeLink === 'productos' }">
+            <i class="bi bi-dash"></i> Productos
+          </a>
+          <a class="nav-link" routerLink="/categorias" (click)="setActiveLink('categorias')"
+             [ngClass]="{ 'active': activeLink === 'categorias' }">
+            <i class="bi bi-dash"></i> Categorías
+          </a>
+          <a class="nav-link" routerLink="/marcas" (click)="setActiveLink('marcas')"
+             [ngClass]="{ 'active': activeLink === 'marcas' }">
+            <i class="bi bi-dash"></i> Marcas
+          </a>
+          <a class="nav-link" routerLink="/entregas" (click)="setActiveLink('entregas')"
+             [ngClass]="{ 'active': activeLink === 'entregas' }">
+            <i class="bi bi-dash"></i> Entregas
+          </a>
+          <a class="nav-link" routerLink="/detalle-entrega" (click)="setActiveLink('lugares-entrega')"
+             [ngClass]="{ 'active': activeLink === 'lugares-entrega' }">
+            <i class="bi bi-dash"></i> Lugares de Entrega
+          </a>
+        </div>
+  
+        <!-- INVENTARIO -->
+        <a class="nav-link" (click)="toggleSubmenu('submenu4')">
+          <span class="icon"><i class="bi bi-box"></i></span>
+          <span class="description fw-bold">Gestión de Inventario <i class="bi bi-caret-down-fill"></i></span>
+        </a>
+        <div class="sub-menu" id="submenu4" [ngClass]="{ 'collapse': openSubmenu !== 'submenu4' }">
+          <a class="nav-link" routerLink="/ingresos" (click)="setActiveLink('ingresos')"
+             [ngClass]="{ 'active': activeLink === 'ingresos' }">
+            <i class="bi bi-dash"></i> Ingresos
+          </a>
+          <a class="nav-link" routerLink="/salidas" (click)="setActiveLink('salidas')"
+             [ngClass]="{ 'active': activeLink === 'salidas' }">
+            <i class="bi bi-dash"></i> Salidas
+          </a>
+          <a class="nav-link" routerLink="/devoluciones" (click)="setActiveLink('devoluciones')"
+             [ngClass]="{ 'active': activeLink === 'devoluciones' }">
+            <i class="bi bi-dash"></i> Devoluciones
+          </a>
+        </div>
+
+        <!-- COMPRAS -->
+        <a class="nav-link" (click)="toggleSubmenu('submenu5')">
+          <span class="icon"><i class="bi bi-receipt-cutoff"></i></span>
+          <span class="description fw-bold">Compras <i class="bi bi-caret-down-fill"></i></span>
+        </a>
+        <div class="sub-menu" id="submenu5" [ngClass]="{ 'collapse': openSubmenu !== 'submenu5' }">
+          <a class="nav-link" routerLink="/registrar-compra" (click)="setActiveLink('registrar-compra')"
+             [ngClass]="{ 'active': activeLink === 'registrar-compra' }">
+            <i class="bi bi-dash"></i> Nueva Compra
+          </a>
+          <a class="nav-link" routerLink="/listado-compras" (click)="setActiveLink('listado-compras')"
+             [ngClass]="{ 'active': activeLink === 'listado-compras' }">
+            <i class="bi bi-dash"></i> Listado de Compras
+          </a>
+          <a class="nav-link" routerLink="/compras-sugeridas" (click)="setActiveLink('compras-sugeridas')"
+             [ngClass]="{ 'active': activeLink === 'compras-sugeridas' }">
+            <i class="bi bi-dash"></i> Compras Surgeridas
+          </a>
+        </div>
+  
+        <!-- CLIENTES -->
+        <a class="nav-link" routerLink="/clientes" (click)="setActiveLink('clientes')"
+           [ngClass]="{ 'active': activeLink === 'clientes' }">
+          <span class="icon"><i class="bi bi-person-check"></i></span>
+          <span class="description fw-bold">Clientes</span>
+        </a>
+  
+        <!-- PROVEEDORES -->
+        <a class="nav-link" routerLink="/proveedores" (click)="setActiveLink('proveedores')"
+           [ngClass]="{ 'active': activeLink === 'proveedores' }">
+          <span class="icon"><i class="bi bi-person-badge"></i></span>
+          <span class="description fw-bold">Proveedores</span>
+        </a>
+  
+        <!-- REPORTES -->
+        <a class="nav-link" routerLink="/reportes" (click)="setActiveLink('reportes')"
+           [ngClass]="{ 'active': activeLink === 'reportes' }">
+          <span class="icon"><i class="bi bi-pass"></i></span>
+          <span class="description fw-bold">Reportes</span>
+        </a>
+      
+    
+      </div>
+    </nav>
+  </div>
+  

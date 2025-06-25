@@ -1,0 +1,174 @@
+<app-header/>
+<app-sidebar/>
+
+<main class="main-content">
+  <div class="separador">
+    <div class="header-title">
+        <a href="/pagospendientes"><i class="bi bi-arrow-bar-left"></i>Regresar</a>
+        <p class="title">Detalle Comprobante Pagos pendientes</p>
+    </div>
+
+    <div class="formulario">
+        <form class="row g-3">
+            <!--tipo comprobante-->
+            <div class="col-md-4">
+                <label for="inputComprobante" class="form-label">Tipo de Comprobante</label>
+                <select id="inputComprobante" class="form-select" disabled>
+                  <option selected>Boleta de Venta Electrónica</option>
+                  <option>Factura de Venta Electrónica</option>
+                </select>
+            </div>
+            <!--serie-->
+            <div class="col-md-2">
+              <label for="inputSerie" class="form-label">Serie</label>
+              <input type="password" class="form-control" id="inputSerie" disabled>
+            </div>
+            <!--emision-->
+            <div class="col-md-3">
+              <label for="inputEmision" class="form-label">Fecha de Emisión</label>
+              <div class="input-group">
+                <span class="input-group-text">
+                  <i class="bi bi-calendar-event"></i>
+                </span>
+                <input type="text" class="form-control" id="inputEmision" value="{{currentDateTime}}" disabled>
+              </div>
+            </div>
+            <!--venc-->
+            <div class="col-md-3">
+                <label for="inputVec" class="form-label" disabled>Fec. Vencimiento</label>
+                <div class="input-group">
+                    <span class="input-group-text">
+                      <i class="bi bi-calendar-event"></i>
+                    </span>
+                    <input type="text" class="form-control" id="inputVec" value="{{currentDateTime}}" disabled>
+                  </div>
+            </div>
+          </form>
+
+          <form class="row g-3">
+            <!--cliente-->
+            <div class="col-md-6">
+                <label for="inputCliente" class="form-label">Cliente</label>
+                <select id="inputMoneda" class="form-select " disabled>
+                    <option selected>99999 - Clientes - Varios </option>
+                    <option>...</option>
+                </select>
+            </div>
+            <!--moneda-->
+            <div class="col-md-1">
+                <label for="inputMoneda" class="form-label" >Moneda</label>
+                <select id="inputMoneda" class="form-select" disabled>
+                    <option selected>S/</option>
+                    <option>$</option>
+                </select>
+            </div>
+            <!--cambio-->
+            <div class="col-md-2">
+              <label for="inputCambio" class="form-label" >Tipo de cambio</label>
+              <input type="text" class="form-control" id="inputCambio" value="3.66" disabled>
+            </div>
+            <div class="col-md-2">
+                <label for="inputCambio" class="form-label" >Modalidad de cambio </label>
+                <input type="text" class="form-control" id="inputCambio" value="Cuotas" disabled>
+              </div>
+            <div class="col-md-1">
+                <label for="inputCambio" class="form-label" >Nr Cuotas </label>
+                <input type="text" class="form-control" id="inputCambio" value="4" disabled>
+            </div>
+          </form>
+    </div>
+
+
+    <table class="table">
+        <thead>
+          <tr class="header">
+            <th scope="col">#</th>
+            <th scope="col">Producto</th>
+            <th scope="col">Unidad</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Precio Unitario</th>
+            <th scope="col">Subtotal</th>
+            <th scope="col">Total</th>
+            <th scope="col"></th>
+          </tr>
+        </thead>
+        <tbody class="body">
+          <tr>
+            
+          </tr>
+          <tr>
+            
+          </tr>
+          <tr>
+            
+          </tr>
+        </tbody>
+      </table>
+      <div class="group3">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalEdit">Pagar Cuota                
+        </button>
+    </div>
+  </div>
+    
+    <!--ModalEdit-->
+    <div class="modal fade modal-lg" id="modalEdit" tabindex="-1" aria-labelledby="modalEdit" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="modalEdit">Nro</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+              <div class="modal-body">
+                <form class="row g-3">
+                  <div class="col-md-4">
+                    <label for="inputTipoDoc" class="form-label">Metodo de pago</label>
+                      <select id="inputTipoDoc"
+                        class="form-select"
+                        [(ngModel)]="metodoPago"
+                        name="metodoPago"
+                        (change)="actualizarDestino()">
+                            <option>Efectivo</option>
+                            <option>Tarjeta</option>
+                            <option>Yape</option>
+                            <option>Plin</option>
+                            <option>Transferencia</option>
+                      </select>
+                  </div>
+                
+                  <div class="col-md-2">
+                    <label class="form-label">Monto</label>
+                    <input type="text" class="form-control" [value]="monto" disabled>
+                  </div>
+                
+                  <div class="col-md-3">
+                    <label class="form-label">Destino</label>
+                    <input type="text" class="form-control" [value]="destino" disabled>
+                  </div>
+                
+                  <div class="col-md-2">
+                    <label class="form-label">Observacion</label>
+                    <input type="text" class="form-control" [value]="observacion"disabled>
+                  </div>
+                </form>
+              </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalExito">Pagar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- MODAL MENSAJE -->
+        <div class="modal fade" id="modalExito" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content text-center p-3">
+              <div class="modal-body">
+                <h5 class="text-success">✅¡Pago exitoso!</h5>
+              </div>
+              <div class="modal-footer justify-content-center">
+                <button class="btn btn-success" data-bs-dismiss="modal">Salir</button>
+              </div>
+            </div>
+          </div>
+        </div>
+</main>

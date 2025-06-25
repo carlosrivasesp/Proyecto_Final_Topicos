@@ -1,0 +1,224 @@
+<app-header />
+<app-sidebar />
+
+<main class="main-content">
+  <div class="separador">
+    <div class="header-title">
+      <p class="title">Entregas pendientes</p>
+    </div>
+
+    <div class="filter">
+        <div class="group1">
+          <p class="description">Filtrar por: </p>
+
+          <div class="dropdown">
+            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              Tipo Comprobante
+            </button>
+            <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" (click)="selectedFilter = 'tipoComprobante'"
+                >Cliente</a
+              >
+            </li>
+            <li>
+              <a class="dropdown-item" (click)="selectedFilter = 'estado'"
+                >Estado</a
+              >
+            </li>
+          </ul>
+          </div>
+        </div>
+
+        <div class="group2">
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="searchTerm"
+            placeholder="Buscar"
+          />
+          <span class="input-group-text"><i class="bi bi-search"></i></span>
+        </div>
+      </div>
+      </div>
+    </div>
+
+
+    <table class="table">
+      <thead>
+        <tr class="header">
+          <th scope="col" style="width: 200px;">Tipo comprobante</th>
+          <th scope="col" style="width: 150px;">Serie</th>
+          <th scope="col" style="width: 200px;">Nro. Comprobante</th>
+          <th scope="col" style="width: 200px;">Dirección</th>
+          <th scope="col" style="width: 200px;">Estado</th>
+          <th scope="col" style="width: 80px;">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="body">
+        <tr *ngFor="let e of filteredEntregas">
+          <td>{{ e.ventaId.tipoComprobante }}</td>
+          <td>{{ e.ventaId.serie }}</td>
+          <td>{{ e.ventaId.nroComprobante }}</td>
+          <td>{{ e.direccion }}</td>
+          <td>{{ e.estado }}</td>
+          <td>
+            <a class="actions" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <button><i class="bi bi-three-dots-vertical"></i></button>
+            </a>
+
+            <ul class="dropdown-menu">
+              <li>
+                <a class="dropdown-item" *ngIf="e.estado === 'Pendiente'" data-bs-toggle="modal" data-bs-target="#modalEdit"
+                  (click)="entregaSeleccionada = e">
+                  Programar
+                </a>
+              </li>
+            
+            
+              <li *ngIf="e.estado === 'En proceso'"  ><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#" 
+              (click)="cambiarEstado(e._id!, 'Finalizado')">Finalizar</a></li>
+            </ul>
+          </td>
+
+
+
+
+          <!-- <td>
+              <button class="btn btn-sm btn-danger" (click)="onDeleteProduct(i)">Eliminar</button>
+            </td> -->
+        </tr>
+      </tbody>
+    </table>
+
+    <nav *ngIf="totalPages > 1">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button class="page-link" (click)="changePage(currentPage - 1)">
+            Anterior
+          </button>
+        </li>
+        <li
+          class="page-item"
+          *ngFor="let page of [].constructor(totalPages); let i = index"
+          [class.active]="currentPage === i + 1"
+        >
+          <button class="page-link" (click)="changePage(i + 1)">
+            {{ i + 1 }}
+          </button>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <button class="page-link" (click)="changePage(currentPage + 1)">
+            Siguiente
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+  <!-- MODAL AGREGAR -->
+
+  <div class="modal fade modal-lg" id="modalAdd" tabindex="-1" aria-labelledby="modalAdd" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modalAdd">Registrar Proveedor</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <div class="modal-body">
+          <form class="row g-3">
+            <div class="col-md-6">
+              <label for="inputTipoDoc" class="form-label">Tipo de Documento</label>
+              <select id="inputTipoDoc" class="form-select">
+                <option selected>DNI</option>
+                <option>RUC</option>
+              </select>
+            </div>
+            <div class="col-md-6">
+              <label for="inputPassword4" class="form-label">Numero de Documento</label>
+              <input type="password" class="form-control" id="inputPassword4">
+            </div>
+            <div class="col-12">
+              <label for="inputAddress" class="form-label">Nombre</label>
+              <input type="text" class="form-control" id="inputAddress">
+            </div>
+            <div class="col-md-6">
+              <label for="inputAddress2" class="form-label">Telefono</label>
+              <input type="text" class="form-control" id="inputAddress2">
+            </div>
+            <div class="col-md-6">
+              <label for="inputCity" class="form-label">Correo</label>
+              <input type="text" class="form-control" id="inputCity"
+                placeholder="&#64;gmail.com / &#64;hotmail.com / &#64;outlook.es">
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-success">Registrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL PROGRAMAR -->
+
+  <div class="modal fade modal-lg" id="modalEdit" tabindex="-1" aria-labelledby="modalEdit" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h1 class="modal-title fs-5" id="modalEdit">Programar entrega</h1>
+          <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        </div>
+        <!-- MODAL PROGRAMAR -->
+        <div class="modal-body">
+          <form class="row g-3">
+            <label class="form-label">Fecha límite:</label>
+            <div class="col-md-6">
+              <label class="form-label">De:</label>
+              <input type="date" class="form-control" [(ngModel)]="fechaInicio" name="fechaInicio">
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Hasta:</label>
+              <input type="date" class="form-control" [(ngModel)]="fechaFin" name="fechaFin">
+            </div>
+            <div class="col-md-12">
+              <label class="form-label">Dirección de entrega:</label>
+              <input type="text" class="form-control" placeholder="Ej. Jr. Lima 123, Surco" [(ngModel)]="direccion"
+                name="direccion">
+            </div>
+          </form>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+          <button type="button" class="btn btn-success"
+            (click)="cambiarEstado(entregaSeleccionada._id!, 'En proceso')">Programar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- MODAL ELIMINAR -->
+
+  <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="modalDelete" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+      <div class="modal-content">
+        <div class="modal-body">
+          <form>
+            <div class="mb-3">
+              <p>¿Estás seguro que deseas eliminar la entrega?</p>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+          <button type="button" class="btn btn-danger">Sí, eliminar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>

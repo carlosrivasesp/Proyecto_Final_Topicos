@@ -1,0 +1,77 @@
+<div class="container">
+  <div class="login-container">
+    <h3 class="login-title">Iniciar Sesión</h3>
+    
+    <form [formGroup]="loginForm">
+      <!-- Mensaje de error general -->
+      <div *ngIf="errorMessage" class="alert alert-danger">
+        {{ errorMessage }}
+      </div>
+      
+      <!-- Correo Electrónico - Campo Obligatorio -->
+      <div class="mb-3">
+        <label for="email" class="form-label">Correo Electrónico *</label>
+        <input 
+          formControlName="correo"
+          type="email" 
+          class="form-control" 
+          [ngClass]="{ 
+            'is-invalid': (f['correo'].touched || formSubmitted) && f['correo'].errors 
+          }"
+          id="email" 
+          placeholder="ejemplo@dominio.com"
+        >
+        <div *ngIf="(f['correo'].touched || formSubmitted) && f['correo'].errors" 
+             class="invalid-feedback">
+          <div *ngIf="f['correo'].errors['required']">
+            El correo electrónico es obligatorio
+          </div>
+          <div *ngIf="f['correo'].errors['email']">
+            Ingresa un correo válido
+          </div>
+        </div>
+      </div>
+      
+      <!-- Contraseña - Campo Obligatorio -->
+      <div class="mb-3">
+        <label for="password" class="form-label">Contraseña *</label>
+        <input 
+          formControlName="password"
+          type="password" 
+          class="form-control" 
+          [ngClass]="{ 
+            'is-invalid': (f['password'].touched || formSubmitted) && f['password'].errors 
+          }"
+          id="password" 
+          placeholder="Ingresa tu contraseña"
+        >
+        <div *ngIf="(f['password'].touched || formSubmitted) && f['password'].errors" 
+             class="invalid-feedback">
+          <div *ngIf="f['password'].errors['required']">
+            La contraseña es obligatoria
+          </div>
+        </div>
+      </div>
+      
+      <!-- Botón con estados de carga -->
+      <button 
+        type="button" 
+        (click)="iniciarSesion()" 
+        class="btn btn-primary btn-login w-100"
+        [disabled]="loginForm.invalid || isLoading"
+        [attr.aria-disabled]="loginForm.invalid || isLoading"
+        [attr.aria-label]="loginForm.invalid ? 'Complete todos los campos para habilitar el botón' : 'Iniciar sesión'"
+      >
+        <span *ngIf="!isLoading">Iniciar Sesión</span>
+        <span *ngIf="isLoading">
+          <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+          Procesando...
+        </span>
+      </button>      
+      <div class="signup-link mt-3 text-center">
+        ¿No tienes una cuenta? 
+        <a routerLink="/signup" class="text-decoration-none">Regístrate</a>
+      </div>
+    </form>
+  </div>
+</div>

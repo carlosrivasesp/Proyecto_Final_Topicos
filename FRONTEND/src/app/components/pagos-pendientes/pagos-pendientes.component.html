@@ -1,0 +1,178 @@
+<app-header/>
+<app-sidebar/>
+
+<main class="main-content">
+  <div class="separador">
+    <p class="title">Listado de pagos pendientes</p>
+
+    <div class="filter">
+        <div class="group1">
+            <p class="description">Filtrar por: </p>
+
+            <div class="dropdown">
+                <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Tipo de Comprobante
+                </button>
+                <ul class="dropdown-menu">
+                <li><a class="dropdown-item" href="/comprobantes">Tipo de Comprobante</a></li>
+                <li><a class="dropdown-item" href="/comprobantes">Nro. Comprobante</a></li>
+                <li><a class="dropdown-item" href="/comprobantes">Nro. Documento</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="group2">
+            <div class="input-group">
+                <input type="text" class="form-control" aria-label="" placeholder="Buscar">
+                <span class="input-group-text"><i class="bi bi-search"></i></span>
+            </div>
+        </div>        
+    </div>
+
+        
+    <table class="table">
+        <thead>
+          <tr class="header">
+            <th scope="col" style="width: 150px;">#</th>
+            <th scope="col" style="width: 150px;">Tipo de comprobante</th>
+            <th scope="col" style="width: 150px;">Serie</th>
+            <th scope="col" style="width: 150px;">Nro. Comprobante</th>
+            <th scope="col" style="width: 150px;">Cliente</th>
+            <th scope="col" style="width: 150px;">Fecha de emisión</th>
+            <th scope="col" style="width: 150px;">Método de pago</th>
+            <th scope="col" style="width: 150px;">Total</th>
+            <th scope="col" style="width: 150px;">Estado</th>
+            <th scope="col" style="width: 150px;">Tipo de Pago</th>
+            <th scope="col" style="width: 8px;">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="body">
+          <tr>
+            <th scope="row">1</th>
+            <td>Boleta</td>
+            <td>A0001</td>
+            <td>2123123</td>
+            <td>Carlos Edgardo Rivas Espichan</td>
+            <td>01/04/2025</td>
+            <td>Efectivo</td>
+            <td>200</td>
+            <td>Valido</td>
+            <td>Cuotas</td>
+            <td>
+                <a class="actions" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button><i class="bi bi-three-dots-vertical"></i></button>
+                </a>
+              
+                <ul class="dropdown-menu">
+                  <li><a class="dropdown-item" href="/comprobantepagospendientes">Ver Detalles</a></li>
+                  <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalEdit">Editar</a></li> <!--href="#"-->
+                  <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalDelete">Anular</a></li>
+                </ul>
+        </td>
+          </tr>
+          <tr>
+            <th scope="row">2</th>
+            <td>Boleta</td>
+            <td>A0001</td>
+            <td>2123123</td>
+            <td>Carlos Edgardo Rivas Espichan</td>
+            <td>01/04/2025</td>
+            <td>Efectivo</td>
+            <td>200</td>
+            <td>Anulado</td>
+            <td>Cuotas</td>
+            <td>
+                    <a class="actions" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        <button><i class="bi bi-three-dots-vertical"></i></button>
+                    </a>
+                  
+                    <ul class="dropdown-menu">
+                        <li><a class="dropdown-item" href="/comprobantepagospendientes">Ver Detalles</a></li>
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalEdit">Editar</a></li> <!--href="#"-->
+                        <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalDelete">Anular</a></li>
+                      </ul>
+            </td>
+          </tr>
+          <tr>
+            <th scope="row">3</th>
+            <td>Factura</td>
+            <td>A0001</td>
+            <td>2123123</td>
+            <td>Carlos Edgardo Rivas Espichan</td>
+            <td>01/04/2025</td>
+            <td>Efectivo</td>
+            <td>200</td>
+            <td>Valido</td>
+            <td>Cuotas</td>
+          
+            <td>
+                <a class="actions" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                    <button><i class="bi bi-three-dots-vertical"></i></button>
+                </a>
+              
+                <ul class="dropdown-menu">
+                    <li><a class="dropdown-item" href="/comprobantepagospendientes">Ver Detalles</a></li>
+                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalEdit">Editar</a></li> <!--href="#"-->
+                    <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalDelete">Anular</a></li>
+                  </ul>
+        </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+       
+      <!-- MODAL EDITAR -->
+
+      <div class="modal fade modal-lg" id="modalEdit" tabindex="-1" aria-labelledby="modalEdit" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="modalEdit">Nro</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form class="row g-3">
+                    <div class="col-md-6">
+                        <label for="inputTipoDoc" class="form-label">Metodo de pago</label>
+                        <select id="inputTipoDoc" class="form-select">
+                          <option selected>Efectivo</option>
+                          <option>Tarjeta</option>
+                          <option>Yape</option>
+                          <option>Plin</option>
+                          <option>Transferencia</option>
+
+                        </select>
+                    </div>
+                   
+                </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+              <button type="button" class="btn btn-success">Pagar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- MODAL ELIMINAR -->
+
+      <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="modalDelete" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-body">
+              <form>
+                <div class="mb-3">
+                  <p>¿Estás seguro que deseas anular el comprobante?</p>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+              <button type="button" class="btn btn-danger">Sí, anular</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+</main>

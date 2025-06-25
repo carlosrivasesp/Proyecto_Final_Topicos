@@ -1,0 +1,96 @@
+<app-header />
+<app-sidebar />
+
+<main class="main-content">
+  <div class="separador">
+    <div class="header-title">
+      <a href="/lista-cotizaciones"><i class="bi bi-arrow-bar-left"></i>Regresar</a>
+      <p class="title">Detalle Cotización</p>
+    </div>
+
+    <div class="formulario">
+      <form [formGroup]="cotizacionForm">
+        <!-- Fila 1 -->
+        <div class="row g-3">
+          <div class="col-md-6">
+            <label for="inputCliente" class="form-label">Cliente</label>
+            <select id="inputCliente" class="form-select" formControlName="cliente" >
+              <option *ngFor="let cliente of listClientes" [ngValue]="cliente._id">
+                {{ cliente.nroDoc }} - {{ cliente.nombre }}
+              </option>
+            </select>
+          </div>
+
+          <div class="col-md-3">
+            <label for="inputEmision" class="form-label">Fecha de Emisión</label>
+            <div class="input-group">
+              <span class="input-group-text"><i class="bi bi-calendar-event"></i></span>
+              <input type="text" class="form-control" id="inputEmision" formControlName="fechaEmision"  />
+            </div>
+          </div>
+
+          <div class="col-md-1">
+            <label for="inputCambio" class="form-label">Tipo de Cambio</label>
+            <input type="text" class="form-control" id="inputCambio" formControlName="tipoCambio" />
+          </div>
+
+          <div class="col-md-2">
+            <label for="inputMoneda" class="form-label">Moneda</label>
+            <select id="inputMoneda" class="form-select" formControlName="moneda" >
+              <option selected>S/</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Fila 2 -->
+        <div class="row g-3 mt-2">
+          <div class="col-md-6">
+            <label for="inputContacto" class="form-label">Contacto</label>
+            <input type="text" class="form-control" id="inputContacto" formControlName="contacto" />
+          </div>
+
+          <div class="col-md-6">
+            <label for="inputTelefono" class="form-label">Teléfono</label>
+            <input type="text" class="form-control" id="inputTelefono" formControlName="telefono"  />
+          </div>
+        </div>
+      </form>
+
+    </div>
+
+    <table class="table custom-table">
+      <thead>
+        <tr class="header">
+          <th scope="col">Descripción</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Valor Unitario</th>
+          <th scope="col">Precio Unitario</th>
+          <th scope="col">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody class="body">
+        <tr *ngFor="let detalle of detalles.controls; let i = index" [formGroup]="getDetalleFormGroup(i)">
+          <td>{{ detalle.get('descripcion')?.value }}</td>
+          <td>{{ detalle.get('cantidad')?.value }}</td>
+          <td>{{ detalle.get('valorUnitario')?.value }}</td>
+          <td>{{ detalle.get('precioUnitario')?.value }}</td>
+          <td>{{ detalle.get('subtotal')?.value }}</td>
+        </tr>
+
+      </tbody>
+    </table>
+
+    <div class="position-absolute text-end" style="right: 1.5rem; bottom: 1.5rem">
+      <div style="font-size: 0.85rem">
+        <div>
+          <strong>IGV:</strong> S/
+          {{ cotizacionForm.get("total")?.value * 0.18 | number: '1.2-2' }}
+        </div>
+        <div class="mb-2">
+          <strong>Total:</strong> S/
+          {{ cotizacionForm.get("total")?.value | number: '1.2-2' }}
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

@@ -1,0 +1,173 @@
+<app-header />
+<app-sidebar />
+
+<main class="main-content">
+  <div class="separador">
+    <div class="header-title">
+      <a href="/comprobantes"><i class="bi bi-arrow-bar-left"></i>Regresar</a>
+      <p class="title">Detalle comprobante</p>
+    </div>
+
+    <div class="formulario">
+      <form class="row g-3" [formGroup]="ventaForm">
+        <!--tipo comprobante-->
+        <div class="col-md-5">
+          <label for="inputComprobante" class="form-label"
+            >Tipo de Comprobante</label
+          >
+          <select
+            id="inputComprobante"
+            class="form-select"
+            formControlName="tipoComprobante"
+          >
+            <option selected>BOLETA DE VENTA ELECTRONICA</option>
+            <option>FACTURA DE VENTA ELECTRONICA</option>
+          </select>
+        </div>
+        <!--serie-->
+        <div class="col-md-1">
+          <label for="inputSerie" class="form-label">Serie</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputSerie"
+            formControlName="serie"
+          />
+        </div>
+        <!-- número de comprobante -->
+        <div class="col-md-2">
+          <label for="inputNro" class="form-label">N° Comprobante</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputNro"
+            formControlName="nroComprobante"
+          />
+        </div>
+
+        <!--emision-->
+        <div class="col-md-2">
+          <label for="inputEmision" class="form-label">Fecha de Emisión</label>
+          <div class="input-group">
+            <span class="input-group-text">
+              <i class="bi bi-calendar-event"></i>
+            </span>
+            <input
+              type="text"
+              class="form-control"
+              id="inputEmision"
+              formControlName="fechaEmision"
+            />
+          </div>
+        </div>
+        <!--venc-->
+        <div class="col-md-2">
+          <label for="inputVec" class="form-label" disabled
+            >Fec. Vencimiento</label
+          >
+          <div class="input-group">
+            <span class="input-group-text">
+              <i class="bi bi-calendar-event"></i>
+            </span>
+            <input
+              type="text"
+              class="form-control"
+              id="inputVec"
+              formControlName="fechaVenc"
+            />
+          </div>
+        </div>
+        <!--cliente-->
+        <div class="col-md-6">
+          <label for="inputCliente" class="form-label">Cliente</label>
+          <select
+            id="inputCliente"
+            class="form-select"
+            formControlName="cliente"
+          >
+            <option *ngFor="let cliente of listClientes" [ngValue]="cliente.id">
+              {{ cliente.nroDoc }} - {{ cliente.nombre }}
+            </option>
+          </select>
+        </div>
+        <!--moneda-->
+        <div class="col-md-1">
+          <label for="inputMoneda" class="form-label">Moneda</label>
+          <select id="inputMoneda" class="form-select" formControlName="moneda">
+            <option selected>S/</option>
+          </select>
+        </div>
+        <!--cambio-->
+        <div class="col-md-1">
+          <label for="inputCambio" class="form-label">Tipo de cambio</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputCambio"
+            formControlName="tipoCambio"
+          />
+        </div>
+        <div class="col-md-2">
+          <label for="inputTipoDoc" class="form-label">Metodo de pago</label>
+          <select id="inputTipoDoc" class="form-select" formControlName="metodoPago">
+            <option selected>Efectivo</option>
+            <option>Tarjeta de debito</option>
+            <option>Tarjeta de credito</option>
+            <option>Yape</option>
+            <option>Plin</option>
+            <option>Transferencia</option>
+          </select>
+        </div>
+        <!-- estado -->
+        <div class="col-md-2">
+          <label for="inputEstado" class="form-label">Estado</label>
+          <input
+            type="text"
+            class="form-control"
+            id="inputEstado"
+            formControlName="estado"
+          />
+        </div>
+      </form>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr class="header">
+          <th scope="col">Codigo</th>
+          <th scope="col">Producto / Servicio</th>
+          <th scope="col">Cantidad</th>
+          <th scope="col">Precio Unitario</th>
+          <th scope="col">Subtotal</th>
+        </tr>
+      </thead>
+      <tbody class="body">
+        <tr *ngFor="let detalle of detalles.controls">
+          <tr *ngFor="let detalle of detalles.controls">
+            <td>{{ detalle.get('codigo')?.value }}</td>
+            <td>{{ detalle.get('descripcion')?.value }}</td>
+            <td>{{ detalle.get('cantidad')?.value }}</td>
+            <td>{{ detalle.get('precio')?.value }}</td>
+            <td>{{ detalle.get('subtotal')?.value }}</td>
+          </tr>
+      </tbody>      
+    </table>
+    
+
+    <div
+      class="position-absolute text-end"
+      style="right: 1.5rem; bottom: 1.5rem"
+    >
+      <div style="font-size: 0.85rem">
+        <div>
+          <strong>IGV:</strong> S/
+          {{ ventaForm.get("igv")?.value | number : "1.2-2" }}
+        </div>
+        <div class="mb-2">
+          <strong>Total:</strong> S/
+          {{ ventaForm.get("total")?.value | number : "1.2-2" }}
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

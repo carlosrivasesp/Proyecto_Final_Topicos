@@ -1,0 +1,179 @@
+<app-header/>
+<app-sidebar/>
+
+<main class="main-content">
+  <div class="separador">
+    <p class="title">Listado de entregas</p>
+
+    <div class="filter">
+      <div class="group1">
+          <p class="description">Filtrar por: </p>
+
+          <div class="dropdown">
+            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ capitalize(selectedFilter) }}
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" (click)="selectedFilter = 'distrito'"> Distrito </a></li>
+              <li><a class="dropdown-item" (click)="selectedFilter = 'codigo'"> Codigo </a></li>
+            </ul>
+          </div>
+      </div>
+
+      <div class="group2">
+        <div class="input-group">
+            <input type="text" class="form-control" [(ngModel)]="searchTerm" placeholder="Buscar">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+        </div>
+      </div>
+
+      <div class="group3">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAdd" (click)="resetFormulario()">
+            <i class="bi bi-plus"></i>
+        </button>
+      </div>
+      <div class="group4">
+        <button type="button" class="btn btn-success" data-bs-toggle="modal">
+            <a href="/entregas">Entregas pendientes</a>
+        </button>
+      </div>
+      
+  </div>
+
+
+    <table class="table">
+        <thead>
+          <tr class="header">
+            <th scope="col" style="width: 150px;">Codigo</th>
+            <th scope="col" style="width: 200px;">Distrito</th>
+            <th scope="col" style="width: 200px;">Costo</th>
+            <th scope="col" style="width: 200px;">Tiempo entrega (días)</th>
+            <th scope="col" style="width: 80px;">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="body">
+          <tr *ngFor="let lugar of paginated">
+            <td>{{lugar.codigo}}</td>
+            <td>{{lugar.distrito}}</td> 
+            <td>S/ {{lugar.costo}}</td>
+            <td>{{lugar.inicio}} - {{lugar.fin}}</td>
+            <td>
+              <a class="actions" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <button><i class="bi bi-three-dots-vertical"></i></button>
+              </a>
+  
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalEdit"(click)="editarLugar(lugar)">Editar</a></li>           
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <nav *ngIf="totalPages > 1" class="mt-3" aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <a class="page-link" (click)="changePage(currentPage - 1)">Anterior</a>
+          </li>
+          <li class="page-item"
+              *ngFor="let page of [].constructor(totalPages); let i = index"
+              [class.active]="currentPage === i + 1">
+            <a class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</a>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <a class="page-link" (click)="changePage(currentPage + 1)">Siguiente</a>
+          </li>
+        </ul>
+      </nav>     
+    </div>
+     <!-- MODAL REGISTRAR ENTREGA -->
+     <div class="modal fade modal-lg" id="modalAdd" tabindex="-1" aria-labelledby="modalAdd" aria-hidden="true">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5" id="modalAdd">Registrar Entrega</h1>
+            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            <form class="row g-3" [formGroup]="lugarForm" (ngSubmit)="registrarLugar()">
+              <div class="col-md-4">
+                <label for="inputDistrito" class="form-label">Distrito</label>
+                <input type="text" class="form-control" id="inputDistrito" formControlName="distrito">
+                <div class="text-danger" *ngIf="lugarForm.get('distrito')?.hasError('required') && lugarForm.get('distrito')?.touched">
+                  <span>Debe ingresar el distrito</span>
+                </div>
+              </div>
+              <div class="col-md-3">
+                <label for="inputCosto" class="form-label">Costo</label>
+                <input type="text" class="form-control" id="inputCosto" formControlName="costo">
+                <div class="text-danger"
+                  *ngIf="lugarForm.get('costo')?.hasError('required') && lugarForm.get('costo')?.touched">
+                  <span>Debe ingresar el costo de la entrega</span>
+                </div>
+              </div>
+              <div class="col-2">
+                <label for="inputInicio" class="form-label">Inicio</label>
+                <input type="text" class="form-control" id="inputInicio" formControlName="inicio">
+                <div class="text-danger"
+                  *ngIf="lugarForm.get('inicio')?.hasError('required') && lugarForm.get('inicio')?.touched">
+                  <span>Debe ingresar el inicio</span>
+                </div>
+              </div>
+              <div class="col-md-2">
+                <label for="inputFin" class="form-label">Fin</label>
+                <input type="text" class="form-control" id="inputFin" formControlName="fin">
+                <div class="text-danger"
+                  *ngIf="lugarForm.get('fin')?.hasError('required') && lugarForm.get('fin')?.touched">
+                  <span>Debe ingresar el fin</span>
+                </div>
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="resetFormulario()">Cancelar</button>
+                <button type="submit" [disabled]="lugarForm.invalid" class="btn btn-success"data-bs-dismiss="modal">Registrar</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+   
+
+      <!-- MODAL EDITAR -->
+
+      <div class="modal fade modal-lg" id="modalEdit" tabindex="-1" aria-labelledby="modalEdit" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="modalEdit">Modificar datos</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form class="row g-3" [formGroup]="lugarForm">
+                <div class="col-md-4">
+                  <label for="inputDistritoEdit" class="form-label">Distrito</label>
+                  <input type="text" class="form-control" id="inputDistritoEdit" [value]="lugarForm.get('distrito')?.value" disabled>
+                </div>
+                <div class="col-md-3">
+                  <label for="inputCosto" class="form-label">Costo</label>
+                  <input type="text" class="form-control" id="inputCosto" formControlName="costo">
+                </div>
+                <div class="col-2">
+                  <label for="inputInicio" class="form-label">Inicio</label>
+                  <input type="text" class="form-control" id="inputInicio" formControlName="inicio">
+                </div>
+                <div class="col-md-2">
+                  <label for="inputFin" class="form-label">Fin</label>
+                  <input type="text" class="form-control" id="inputFin" formControlName="fin">
+                </div>
+    
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal"
+                    (click)="resetFormulario()">Cancelar</button>
+                  <button type="button" class="btn btn-success" (click)="actualizarLugar()"
+                    data-bs-dismiss="modal">Aceptar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>    
+</main>

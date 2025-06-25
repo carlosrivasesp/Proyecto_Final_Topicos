@@ -1,0 +1,102 @@
+.main-content{
+    height: 100%;
+    margin-left: 300px;
+    padding: 20px;
+}
+
+.separador{
+    margin-top: 70px;
+}
+
+.title {
+    font-size: 20px;
+}
+
+.card-title {
+    font-size: 14px;
+}
+
+.card-text {
+    font-size: 12px;
+    color: rgb(75, 75, 75);
+}
+
+.list-group-item {
+    font-size: 12px;
+    color: rgb(75, 75, 75);
+}
+
+.description {
+    font-size: 12px;
+    color: rgb(75, 75, 75);
+}
+
+.dropdown {
+    margin-left: 20px;
+}
+
+.btn.dropdown-toggle {
+    border-radius: 7px;
+    border-width: 0.05px;
+    border-color: rgb(211, 211, 211);
+    font-size: 12px;
+    color: rgb(75, 75, 75);
+}
+
+.dropdown-item {
+    font-size: 12px;
+    color: rgb(75, 75, 75);
+}
+
+.form-control {
+    font-size: 12px;
+}
+
+.header {
+    font-size: 12px;
+}
+
+.body {
+    font-size: 12px;
+}
+
+.modal-body {
+    font-size: 12px;
+}
+
+.form-label {
+    font-size: 12px;
+}
+
+.form-select {
+    font-size: 12px;
+}
+
+.btn {
+    font-size: 12px;
+}
+
+.input-group-text {
+    font-size: 12px;
+}
+
+.dropdown {
+    width: 100px;
+}
+
+.card {
+    background-color: #f8f9fa;
+    border-radius: 12px;
+    border: 1px solid #dee2e6;
+    box-shadow: 0 8px 12px rgba(0, 0, 0, 0.08);
+}
+
+.list-group-item {
+    background-color: #f8f9fa;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.list-group-item:hover {
+    background-color: #f0f0f0;
+}

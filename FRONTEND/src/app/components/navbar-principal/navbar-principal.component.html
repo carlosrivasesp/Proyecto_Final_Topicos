@@ -1,0 +1,97 @@
+<div class="header">
+    <a class="header-title" href="/principal"> 
+      <p class="title"><i class="bi bi-terminal"></i> Ferretería Santo Cristo </p>
+    </a>
+
+    <div class="info-gen d-flex">
+        <div class="info">
+            <a class="userText">
+                <i class="bi bi-telephone-fill"></i> +51 
+            </a>    
+        </div>
+    
+        <div class="dropdown">
+            <a class="userText" role="button">
+                <i class="bi bi-person-fill"></i> Hola, 
+            </a>
+            <a class="userText" role="button" routerLink="/login">
+                Iniciar Sesión 
+            </a> 
+            <a class="userText" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              <i class="bi bi-caret-down-fill"></i>
+            </a>
+          
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" routerLink="/signup">Registrar</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!-- Navbar -->
+<nav class="navbar d-flex align-items-center justify-content-between flex-wrap">
+    <!-- Menú hamburguesa (solo en pantallas pequeñas) -->
+    <button class="btn d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#menuCategorias">
+      <i class="bi bi-list fs-4"></i>
+    </button>
+  
+    <!-- Categorías visibles solo en pantallas grandes -->
+    <div class="categories d-none d-lg-flex gap-3">
+      <a href="#" class="text-dark text-decoration-none">Herramientas</a>
+      <a href="#" class="text-dark text-decoration-none">Electricidad</a>
+      <a href="#" class="text-dark text-decoration-none">Plomería</a>
+      <a href="#" class="text-dark text-decoration-none">Construcción</a>
+    </div>
+  
+    <!-- Buscador y carrito -->
+    <div class="d-flex align-items-center gap-2">
+      <!-- Botón de búsqueda para pantallas pequeñas -->
+      <button class="btn d-lg-none" data-bs-toggle="modal" data-bs-target="#modalBusqueda">
+        <i class="bi bi-search"></i>
+      </button>
+  
+      <!-- Buscador normal en pantallas grandes -->
+      <form class="d-none d-lg-flex" role="search">
+        <input class="form-control" type="search" placeholder="Buscar productos..." aria-label="Buscar">
+        <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
+      </form>
+  
+      <!-- Carrito -->
+      <div class="car">
+        <i class="bi bi-cart-fill fs-4"></i>
+        <span class="badge bg-primary">0</span>
+      </div>
+    </div>
+  </nav>
+  
+  <!-- Offcanvas Categorías (menú hamburguesa) -->
+  <div class="offcanvas offcanvas-start" tabindex="-1" id="menuCategorias">
+    <div class="offcanvas-header">
+      <h5 class="offcanvas-title">Categorías</h5>
+      <button type="button" class="btn-close" data-bs-dismiss="offcanvas"></button>
+    </div>
+    <div class="offcanvas-body">
+      <a href="#" class="d-block mb-2">Herramientas</a>
+      <a href="#" class="d-block mb-2">Electricidad</a>
+      <a href="#" class="d-block mb-2">Plomería</a>
+      <a href="#" class="d-block mb-2">Construcción</a>
+    </div>
+  </div>
+  
+  <!-- Modal de búsqueda -->
+  <div class="modal fade" id="modalBusqueda" tabindex="-1">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title">Buscar Productos</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form class="d-flex" role="search">
+            <input class="form-control me-2" type="search" placeholder="Buscar productos..." aria-label="Buscar">
+            <button class="btn btn-outline-success" type="submit"><i class="bi bi-search"></i></button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>

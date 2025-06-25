@@ -1,0 +1,279 @@
+<app-header />
+<app-sidebar />
+<main class="main-content">
+  <div class="header">
+    <h4>Bienvenido</h4>
+
+    <div class="dashboard-container">
+      <!-- Card 1 -->
+      <div class="card">
+        <div class="card-body">
+          <!-- cambios para la llamar a la logica del mes con ventas-->
+          <div class="card-text-area">
+            <h5 class="card-title">Mes con más ventas</h5>
+            <ng-container *ngIf="mesConMasVentas; else sinVentas">
+              <h6 class="card-subtitle mb-2 text-body-secondary">
+                {{ getNombreMes(mesConMasVentas.mes) }}
+              </h6>
+              <p class="card-text">
+                El mes con un mayor número de ventas
+              </p>
+            </ng-container>
+            <ng-template #sinVentas>
+              <h6 class="card-subtitle mb-2 text-body-secondary">
+                Sin datos
+              </h6>
+              <p class="card-text">
+                Aún no hay ventas registradas.
+              </p>
+            </ng-template>
+          </div>
+          <!-- fin del cambio-->
+
+          <div class="icon-box">
+            <!-- Icono: gráfico de barras -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M0 0h1v16H0V0zm4 5h1v11H4V5zm4-3h1v14H8V2zm4 6h1v8h-1V8zm4-2h1v10h-1V6z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card">
+        <div class="card-body">
+          <div class="card-text-area">
+            <h5 class="card-title">Total de Ventas</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">{{ totalDeVentas }}</h6>
+            <p class="card-text">Contenido de ventas totales.</p>
+          </div>
+          <div class="icon-box">
+            <!-- Icono: dinero -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+              <path
+                d="M8 0C3.58 0 0 3.58 0 8s3.58 8 8 8 8-3.58 8-8S12.42 0 8 0zM8 15C4.14 15 1 11.86 1 8S4.14 1 8 1s7 3.14 7 7-3.14 7-7 7zm.5-11h-1v1h1c.55 0 1 .45 1 1s-.45 1-1 1h-1.5v1H8.5c.55 0 1 .45 1 1s-.45 1-1 1h-1v1h1c1.1 0 2-.9 2-2 0-.55-.22-1.05-.59-1.41C10.78 9.05 11 8.55 11 8c0-1.1-.9-2-2-2z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-body">
+          <div class="card-text-area">
+            <h5 class="card-title">Producto más vendido</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">
+              {{ productoMasVendido?.nombre || 'N/A' }}
+            </h6>
+            <p class="card-text">
+              Se vendieron {{ productoMasVendido?.cantidad || 0 }} unidades de los registros totales.
+            </p>
+          </div>
+          <div class="icon-box">
+            <!-- Icono: estrella o medalla -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+              <path
+                d="M3.612 15.443c-.396.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.32-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.63.283.95l-3.522 3.356.83 4.73c.078.443-.35.79-.746.592L8 13.187l-4.389 2.256z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card">
+        <div class="card-body">
+          <div class="card-text-area">
+            <h5 class="card-title">Peor Mes</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">
+              {{ mesConMenosVentas ? getNombreMes(mesConMenosVentas.mes) : 'Sin datos' }}
+            </h6>
+            <p class="card-text">
+              El mes con un menor número de ventas
+            </p>
+          </div>
+          <div class="icon-box">
+            <!-- Icono: advertencia -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M8 0a8 8 0 1 0 0 16A8 8 0 0 0 8 0zM7 4h2v5H7V4zm1 9.5a1 1 0 1 1 0-2 1 1 0 0 1 0 2z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <!-- Card 5 -->
+      <div class="card">
+        <div class="card-body">
+          <div class="card-text-area">
+            <h5 class="card-title">Ingresos Totales </h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">
+              S/.{{ ingresosTotales | number:'1.2-2' }}
+            </h6>
+            <p class="card-text">
+              Total obtenido de las ventas
+            </p>
+          </div>
+          <div class="icon-box">
+            <!-- Icono: usuario -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+              <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1H3zm5-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <!-- Card 6 -->
+      <div class="card">
+        <div class="card-body">
+          <div class="card-text-area">
+            <h5 class="card-title">Gastos Totales</h5>
+            <h6 class="card-subtitle mb-2 text-body-secondary">
+              S/.{{ totalComprasRegistradas | number:'1.2-2'}}
+            </h6>
+            <p class="card-text">
+              Total gastado en compras.
+            </p>
+          </div>
+          <div class="icon-box">
+            <!-- Icono: moneda -->
+            <svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 16 16">
+              <path
+                d="M8 0a8 8 0 100 16A8 8 0 008 0zm0 14.5A6.5 6.5 0 1114.5 8 6.508 6.508 0 018 14.5zM8 4a1 1 0 110 2 1 1 0 010-2zm0 3a.5.5 0 00-.5.5v3a.5.5 0 001 0v-3A.5.5 0 008 7z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="charts-container">
+      <!-- Gráfico de líneas -->
+      <!--
+      <div class="chart-box">
+        <h5>Ventas en los ultimos 4 meses</h5>
+        <canvas baseChart [data]="lineChartData" [type]="lineChartType" [options]="lineChartOptions">
+        </canvas>
+      </div>
+        -->
+      <div class="chart-box">
+        <h5>Compras sugeridas</h5> <p class="link" routerLink="/compras-sugeridas">Ver más +</p>
+        <div style="max-height: 400px; overflow-y: auto;">
+          <table class="table table-sm">
+            <thead>
+              <tr>
+                <th>Codigo</th>
+                <th>Nombre</th>
+                <th>Stock Actual</th>
+                <th>Orden de Compra</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let cs of listCompraSugeridas">
+                <td>{{ cs.producto.codInt }}</td>
+                <td>{{ cs.producto.nombre }}</td>
+                <td>{{ cs.producto.stockActual }}</td>
+                <td>{{ cs.tieneOrdenCompra? 'SÍ' : 'No' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+      <!-- Gráfico de barras -->
+      <div class="chart-box">
+        <h5>Productos Más Vendidos del mes</h5>
+        <canvas baseChart [data]="barChartData" [type]="barChartType" [options]="barChartOptions">
+        </canvas>
+      </div>
+    </div>
+
+    <br>
+
+
+    <br>
+    <h4>Últimas ventas pendientes</h4>
+    <!-- Tabla -->
+    <table class="table">
+      <thead>
+        <tr class="header">
+          <th scope="col" style="width: 200px;">Tipo de comprobante</th>
+          <th scope="col" style="width: 90px;">Serie</th>
+          <th scope="col" style="width: 150px;">Nro. Comprobante</th>
+          <th scope="col" style="width: 150px;">Cliente</th>
+          <th scope="col" style="width: 140px;">Fecha de emisión</th>
+          <th scope="col" style="width: 150px;">Método de pago</th>
+          <th scope="col" style="width: 100px;">Total</th>
+          <th scope="col" style="width: 120px;">Estado</th>
+        </tr>
+      </thead>
+      <tbody class="body">
+        <tr *ngFor="let venta of ventasPendientes">
+          <td>{{ venta.tipoComprobante }}</td>
+          <td>{{ venta.serie }}</td>
+          <td>{{ venta.nroComprobante }}</td>
+          <td>{{ venta.cliente.nombre }}</td>
+          <td>
+            {{
+            venta.fechaEmision
+            ? (venta.fechaEmision | date : "dd/MM/yyyy")
+            : "Sin fecha"
+            }}
+          </td>
+          <td>{{ venta.metodoPago }}</td>
+          <td>{{venta.moneda}} {{ venta.total.toFixed(2) }}</td>
+          <td>{{ venta.estado }}</td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+  <br>
+  <div class="d-flex justify-content-end mb-3">
+    <a href="/comprobantes" class="btn btn-success d-flex align-items-center gap-2" style="font-size: 12px;">
+      Ver más
+      <!-- Icono + a la derecha -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus"
+        viewBox="0 0 16 16">
+        <path
+          d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+      </svg>
+    </a>
+  </div>
+  <h4>Últimas Compras pendientes</h4>
+  <table class="table">
+    <thead>
+      <tr class="header">
+        <th scope="col">Tipo de comprobante</th>
+        <th scope="col">Serie</th>
+        <th scope="col">Nro. Comprobante</th>
+        <th scope="col">Proveedor</th>
+        <th scope="col">Fecha de emisión</th>
+        <th scope="col">Método de pago</th>
+        <th scope="col">Total</th>
+        <th scope="col">Estado</th>
+      </tr>
+    </thead>
+    <tbody class="body">
+      <tr *ngFor="let compra of comprasPendientes">
+        <td>{{ compra.tipoComprobante }}</td>
+        <td>{{ compra.serie }}</td>
+        <td>{{ compra.nroComprobante }}</td>
+        <td>{{ compra.proveedor.nombre }}</td>
+        <td>
+          {{
+          compra.fechaEmision
+          ? (compra.fechaEmision | date : "dd/MM/yyyy")
+          : "Sin fecha"
+          }}
+        </td>
+        <td>{{ compra.metodoPago }}</td>
+        <td>{{compra.moneda}} {{ compra.total.toFixed(2) }}</td>
+        <td>{{ compra.estado }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <div class="d-flex justify-content-end mb-3">
+    <a href="/listado-compras" class="btn btn-success d-flex align-items-center gap-2" style="font-size: 12px;">
+      Ver más
+      <!-- Icono + a la derecha -->
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-plus"
+        viewBox="0 0 16 16">
+        <path
+          d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4z" />
+      </svg>
+    </a>
+  </div>
+</main>

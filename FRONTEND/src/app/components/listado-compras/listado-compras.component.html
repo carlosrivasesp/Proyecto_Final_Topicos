@@ -1,0 +1,242 @@
+<app-header/>
+<app-sidebar/>
+
+<main class="main-content">
+  <div class="separador">
+    <p class="title">Listado de compras</p>
+
+    <div class="filter">
+      <div class="group1">
+        <p class="description">Filtrar por:</p>
+        <div class="dropdown">
+          <button
+            class="btn dropdown-toggle"
+            type="button"
+            data-bs-toggle="dropdown"
+            aria-expanded="false"
+          >
+            {{ selectedFilter | uppercase }}
+          </button>
+          <ul class="dropdown-menu">
+            <li>
+              <a class="dropdown-item" (click)="selectedFilter = 'proveedor'">Proveedor</a>
+            </li>
+            <li>
+              <a class="dropdown-item" (click)="selectedFilter = 'fecha'">Fecha</a>
+            </li>
+            <li>
+              <a class="dropdown-item" (click)="selectedFilter = 'estado'">Estado</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="group2">
+        <div class="input-group">
+          <input
+            type="text"
+            class="form-control"
+            [(ngModel)]="searchTerm"
+            placeholder="Buscar"
+          />
+          <span class="input-group-text"><i class="bi bi-search"></i></span>
+        </div>
+      </div>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr class="header">
+          <th scope="col" style="width: 200px;">Tipo de comprobante</th>
+          <th scope="col" style="width: 100px;">Serie</th>
+          <th scope="col" style="width: 150px;">Nro. Comprobante</th>
+          <th scope="col" style="width: 150px;">Proveedor</th>
+          <th scope="col" style="width: 150px;">Fecha de emisión</th>
+          <th scope="col" style="width: 150px;">Método de pago</th>
+          <th scope="col" style="width: 100px;">Total</th>
+          <th scope="col" style="width: 120px;">Estado</th>
+          <th scope="col" style="width: 80px;">Acciones</th>
+        </tr>
+      </thead>
+      <tbody class="body">
+        <tr *ngFor="let compra of paginatedCompras">
+          <td>{{ compra.tipoComprobante }}</td>
+          <td>{{ compra.serie }}</td>
+          <td>{{ compra.nroComprobante }}</td>
+          <td>{{ compra.proveedor.nombre }}</td>
+          <td>
+            {{
+              compra.fechaEmision
+                ? (compra.fechaEmision | date : "dd/MM/yyyy")
+                : "Sin fecha"
+            }}
+          </td>
+          <td>{{ compra.metodoPago }}</td>
+          <td>{{compra.moneda}} {{ compra.total }}</td>
+          <td>{{ compra.estado }}</td>
+          <td>
+            <a
+              class="actions"
+              role="button"
+              data-bs-toggle="dropdown"
+              aria-expanded="false"
+            >
+              <button><i class="bi bi-three-dots-vertical"></i></button>
+            </a>
+
+            <ul class="dropdown-menu">
+              <li>
+                <a
+                  class="dropdown-item"
+                  [routerLink]="['/detalle-compra', compra._id]"
+                  >Ver Detalles</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  data-bs-toggle="modal"
+                  data-bs-target="#modalEdit"
+                  (click)="editarCompra(compra)"
+                  *ngIf="compra.estado === 'Pendiente' "
+                  >Editar</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  data-bs-toggle="modal"
+                  data-bs-target="#modalDelete"
+                  (click)="setCompraAAnular(compra)"
+                  *ngIf="compra.estado !== 'Anulado'"
+                  >Anular</a
+                >
+              </li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+    <nav *ngIf="totalPages > 1">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <button class="page-link" (click)="changePage(currentPage - 1)">
+            Anterior
+          </button>
+        </li>
+        <li
+          class="page-item"
+          *ngFor="let page of [].constructor(totalPages); let i = index"
+          [class.active]="currentPage === i + 1"
+        >
+          <button class="page-link" (click)="changePage(i + 1)">
+            {{ i + 1 }}
+          </button>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <button class="page-link" (click)="changePage(currentPage + 1)">
+            Siguiente
+          </button>
+        </li>
+      </ul>
+    </nav>
+
+    <!-- MODAL EDITAR -->
+    <div class="modal fade" id="modalEdit" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h1 class="modal-title fs-5">{{ selectedCompra }}</h1>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body">
+            <form [formGroup]="compraForm" class="row g-3">
+              <div class="col-md-6">
+                <label for="inputMetodoPago" class="form-label">Método de pago</label>
+                <select
+                  id="inputMetodoPago"
+                  class="form-select"
+                  formControlName="metodoPago"
+                >
+                  <option value="Efectivo">Efectivo</option>
+                  <option value="Tarjeta de credito">Tarjeta de credito</option>
+                  <option value="Tarjeta de debito">Tarjeta de debito</option>
+                  <option value="Yape">Yape</option>
+                  <option value="Plin">Plin</option>
+                  <option value="Transferencia">Transferencia</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label for="inputEstado" class="form-label">Estado</label>
+                <select
+                  id="inputEstado"
+                  class="form-select"
+                  formControlName="estado"
+                >
+                  <option value="Pendiente">Pendiente</option>
+                  <option value="Registrado">Registrado</option>
+                </select>
+              </div>
+
+              <div class="modal-footer">
+                <button class="btn btn-secondary" data-bs-dismiss="modal">
+                  Cancelar
+                </button>
+                <button
+                  class="btn btn-success"
+                  (click)="actualizarCompra()"
+                  data-bs-dismiss="modal"
+                >
+                  Modificar
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL ANULAR -->
+    <div
+      class="modal fade"
+      id="modalDelete"
+      tabindex="-1"
+      aria-labelledby="modalDelete"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-body">
+            <form>
+              <div class="mb-3">
+                <p>¿Estás seguro que deseas anular la compra?</p>
+              </div>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              No
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger"
+              data-bs-dismiss="modal"
+              (click)="anularCompra(compraAAnular)"
+            >
+              Sí, anular
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>

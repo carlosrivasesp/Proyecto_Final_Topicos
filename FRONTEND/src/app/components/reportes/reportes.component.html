@@ -1,0 +1,192 @@
+<app-header />
+<app-sidebar />
+
+<main class="main-content">
+  <div class="separador">
+    <p class="title">Reportes</p>
+
+    <form class="row g-3 mb-4">
+        
+        <div class="col-md-5">
+          <label for="inputEmision" class="form-label">Fecha de Inicio</label>
+          <div class="input-group">
+            <span class="input-group-text">
+              <i class="bi bi-calendar-event"></i>
+            </span>
+            <input type="text" class="form-control" id="inputEmision">
+          </div>
+        </div>
+        
+        <div class="col-md-5">
+            <label for="inputVec" class="form-label">Fecha de Fin</label>
+            <div class="input-group">
+                <span class="input-group-text">
+                  <i class="bi bi-calendar-event"></i>
+                </span>
+                <input type="text" class="form-control" id="inputVec">
+              </div>
+        </div>
+    </form>
+
+    <div class="row">
+      <div class="col-sm-4 mb-3 mb-sm-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Productos</h5>
+            <p class="card-text">Selecciona una opción para exportar</p>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item" (click)="exportarProductos('total')">
+                Total
+              </li>
+              <li
+                class="list-group-item"
+                (click)="exportarProductos('disponibles')"
+              >
+                Disponibles
+              </li>
+              <li
+                class="list-group-item"
+                (click)="exportarProductos('agotados')"
+              >
+                Agotados
+              </li>
+              <li
+                class="list-group-item"
+                (click)="exportarProductos('poco-stock')"
+              >
+                Poco stock
+              </li>
+              <li
+                class="list-group-item"
+                (click)="exportarProductos('descontinuados')"
+              >
+                Descontinuados
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Comprobantes</h5>
+            <p class="card-text">Selecciona una opción para exportar</p>
+            <ul class="list-group list-group-flush">
+              <li class="list-group-item" (click)="exportarComprobante('facturas')">Facturas</li>
+              <li class="list-group-item" (click)="exportarComprobante('boletas')">Boletas</li>
+              <li class="list-group-item" (click)="exportarComprobante('efectivo')">Efectivo</li>
+              <li class="list-group-item" (click)="exportarComprobante('otros')">Otros</li>
+              <li class="list-group-item" (click)="exportarComprobante('listado-general')">Listado general</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+      <div class="col-sm-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Cotizaciones</h5>
+            <p class="card-text">Selecciona una opción para exportar</p>
+            <ul class="list-group list-group-flush">
+              <li
+                class="list-group-item"
+                (click)="exportarCotizaciones('emitidas')"
+              >
+                Emitidas
+              </li>
+              <li
+                class="list-group-item"
+                (click)="exportarCotizaciones('pendientes')"
+              >
+                Pendientes
+              </li>
+              <li
+                class="list-group-item"
+                (click)="exportarCotizaciones('aceptadas')"
+              >
+                Aceptadas
+              </li>
+              <li
+                class="list-group-item"
+                (click)="exportarCotizaciones('rechazadas')"
+              >
+                Rechazadas
+              </li>
+              
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <div class="row justify-content-center">
+      <div class="col-sm-4">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Clientes</h5>
+            <p class="card-text">Selecciona una opción para exportar</p>
+            <ul class="list-group list-group-flush">
+              <li
+                class="list-group-item"
+                (click)="exportarClientes('naturales')"
+              >
+                Persona Natural
+              </li>
+              <li
+                class="list-group-item"
+                (click)="exportarClientes('empresas')"
+              >
+                Empresa / RUC
+              </li>
+              <li
+                class="list-group-item"
+                (click)="exportarClientes('inactivos')"
+              >
+                Inactivos
+              </li>
+              <li class="list-group-item" (click)="exportarClientes('nuevos')">
+                Nuevos
+              </li>
+              <li
+                class="list-group-item"
+                (click)="exportarClientes('frecuentes')"
+              >
+                Frecuentes
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+        <div class="col-sm-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Compras</h5>
+                <p class="card-text">Selecciona una opción para exportar</p>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" (click)="exportarCompras('total-compras')">Listado General </li>
+                    <li class="list-group-item"(click)="exportarCompras('facturas')">Facturas</li>
+                    <li class="list-group-item"(click)="exportarCompras('boletas')">Boletas</li>
+                    <li class="list-group-item"(click)="exportarComprasSugeridas()">Compras Sugeridas</li>
+                    <li class="list-group-item"(click)="exportarCompras('proveedor')">Proveedor</li>
+                </ul>
+              </div>
+            </div>
+        </div>
+        <div class="col-sm-4">
+            <div class="card">
+              <div class="card-body">
+                <h5 class="card-title">Entregas</h5>
+                <p class="card-text">Selecciona una opción para exportar</p>
+                <ul class="list-group list-group-flush">
+                    <li class="list-group-item" (click)="exportarEntregas('listadoEntregas')">Listado general</li>
+                    <li class="list-group-item" (click)="exportarEntregas('entregasRealizadas')">Realizadas</li>
+                    <li class="list-group-item" (click)="exportarEntregas('entregasPendientes')">Pendientes</li>
+                    <li class="list-group-item" (click)="exportarEntregas('entregasProgramadas')">Programadas</li>
+                    <li class="list-group-item" (click)="exportarLugaresEntrega()">Lugares de entrega</li>
+                </ul>
+              </div>
+            </div>
+        </div>
+      </div>
+    </div>
+</main>

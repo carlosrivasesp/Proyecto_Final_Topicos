@@ -1,0 +1,115 @@
+.main-content{
+    height: 100%;
+    margin-left: 300px;
+    padding: 20px;
+}
+
+.separador{
+    margin-top:70px;
+}
+
+.title {
+    font-size: 20px;
+}
+
+.form-label {
+    font-size: 12px;
+}
+
+.form-select {
+    font-size: 12px;
+}
+
+.form-control {
+    font-size: 12px;
+}
+
+.button-agregar{
+    margin-top: 20px;
+}
+
+.table {
+    margin-top: 20px;
+    border-color: black;
+    text-align: center;
+}
+
+thead tr.header th {
+  font-size: 12px;
+}
+
+.header {
+    font-size: 12px;
+}
+
+.body {
+    font-size: 12px;
+}
+
+.btn {
+    background-color: #10401b;
+    color: white;
+    font-size: 12px;
+}
+
+.newClient {
+    text-decoration: none;
+    color: grey;
+    font-weight: bold;
+}
+
+.input-group-text {
+    font-size: 12px;
+}
+
+.actions {
+    border: none;
+    margin: 2px;
+    background-color: #60aa7156;
+}
+
+.pagination {
+    display: flex;
+    gap: 8px;
+    padding: 0;
+    margin-top: 1rem;
+  }
+  
+  .page-item {
+    list-style: none;
+  }
+  
+  .page-link {
+    border: 1px solid #d1d5db; /* borde gris suave */
+    border-radius: 8px;
+    padding: 6px 12px;
+    background-color: #fff;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+    font-size: 12px;
+  }
+  
+  .page-link:hover {
+    background-color: #f3f4f6; /* gris más claro al pasar */
+    color: #111;
+    cursor: pointer;
+  }
+  
+  .page-item.active .page-link {
+    background-color: #10401b; /* azul fuerte Bootstrap-like */
+    color: white;
+    border-color: #10401b;
+    font-weight: 500;
+  }
+  
+  .page-item.disabled .page-link {
+    background-color: #e9ecef;
+    color: #707d6c;
+    pointer-events: none;
+    border-color: #dee2e6;
+    font-style: italic;
+  }
+  

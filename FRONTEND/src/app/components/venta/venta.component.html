@@ -1,0 +1,309 @@
+<app-header />
+<app-sidebar />
+
+<main class="main-content">
+  <div class="separador">
+    <div class="header-title">
+      <p class="title">Nuevo comprobante</p>
+    </div>
+
+    <div class="formulario">
+      <form class="row g-3" [formGroup]="ventaForm">
+        <!--tipo comprobante-->
+        <div class="col-md-4">
+          <label for="inputComprobante" class="form-label">Tipo de Comprobante</label>
+          <select id="inputComprobante" class="form-select" formControlName="tipoComprobante" (change)="onSelectSerie($event)">
+            <option selected value="BOLETA DE VENTA ELECTRONICA">BOLETA DE VENTA ELECTRONICA</option>
+            <option value="FACTURA DE VENTA ELECTRONICA">FACTURA DE VENTA ELECTRONICA</option>
+          </select>
+        </div>
+        <!--serie-->
+        <div class="col-md-2">
+          <label for="inputSerie" class="form-label">Serie</label>
+          <input type="text" class="form-control" id="inputSerie" formControlName="serie" value="{{serie}}"/>
+        </div>
+        <!--emision-->
+        <div class="col-md-3">
+          <label for="inputEmision" class="form-label">Fecha de Emisión</label>
+          <div class="input-group">
+            <span class="input-group-text">
+              <i class="bi bi-calendar-event"></i>
+            </span>
+            <input type="text" class="form-control" id="inputEmision" value="{{ currentDateTime }}"
+              formControlName="fechaEmision" />
+          </div>
+        </div>
+        <!--venc-->
+        <div class="col-md-3">
+          <label for="inputVec" class="form-label">Fec. Vencimiento</label>
+          <div class="input-group">
+            <span class="input-group-text">
+              <i class="bi bi-calendar-event"></i>
+            </span>
+            <input type="text" class="form-control" id="inputVec" value="{{ currentDateTime }}"
+              formControlName="fechaVenc" />
+          </div>
+        </div>
+
+        <!-- <form class="row g-3"> -->
+        <!--cliente-->
+        <div class="col-md-6">
+          <label for="inputCliente" class="form-label">Cliente
+            <a class="newClient" href="#" data-bs-toggle="modal" data-bs-target="#modalNuevoCliente">[+
+              Nuevo]</a></label>
+          <!-- Buscar Cliente -->
+          <div class="dropdown input-group">
+            <input type="text" class="form-control dropdown-toggle" 
+            id="dropdownCliente" 
+            data-bs-toggle="dropdown"
+            aria-expanded="false" 
+            placeholder="Buscar Cliente" 
+            [(ngModel)]="clienteSearchTerm" 
+            name="clienteSearch"
+            (ngModelChange)="onClienteInputChange($event)"
+            [ngModelOptions]="{ standalone: true }" 
+            [attr.data-bs-auto-close]="'outside'" />
+
+            <button *ngIf="clienteSearchTerm" type="button" class="btn btn-outline-secondary"
+              (click)="clearClienteSearch()">
+              <i class="bi bi-x-circle"></i>
+            </button>
+
+            <ul class="dropdown-menu" id="dropdownClientes" style="width: 100%">
+              <li *ngFor="let cliente of filteredClientes">
+                <a class="dropdown-item" (click)="onSelectCliente(cliente)">
+                  {{ cliente.nroDoc }} - {{ cliente.nombre }}
+                </a>
+              </li>
+            </ul>
+          </div>
+          <input type="hidden" formControlName="cliente">
+        </div>
+        <!--moneda-->
+        <div class="col-md-1">
+          <label for="inputMoneda" class="form-label">Moneda</label>
+          <select id="inputMoneda" class="form-select" formControlName="moneda">
+            <option selected>S/</option>
+          </select>
+        </div>
+        <!--cambio-->
+        <div class="col-md-2">
+          <label for="inputCambio" class="form-label">Tipo de cambio</label>
+          <input type="text" class="form-control" id="inputCambio" value="3.66" formControlName="tipoCambio" />
+        </div>
+        <!--metodo de pago-->
+        <div class="col-md-2">
+          <label for="inputTipoDoc" class="form-label">Metodo de pago</label>
+          <select id="inputTipoDoc" class="form-select" formControlName="metodoPago">
+            <option selected value="Efectivo">Efectivo</option>
+            <option value="Tarjeta de debito">Tarjeta de debito</option>
+            <option value="Tarjeta de credito">Tarjeta de credito</option>
+            <option value="Yape">Yape</option>
+            <option value="Plin">Plin</option>
+            <option value="Transferencia">Transferencia</option>
+          </select>
+        </div>
+      </form>
+    </div>
+
+
+
+      <div class="button-agregar">
+        <button type="submit" class="btn" data-bs-toggle="modal" data-bs-target="#modalAdd">
+          <i class="bi bi-plus"></i> Agregar Producto
+        </button>
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr class="header">
+            <th scope="col">Codigo</th>
+            <th scope="col">Producto/Servicio</th>
+            <th scope="col">Cantidad</th>
+            <th scope="col">Precio Unitario</th>
+            <th scope="col">Subtotal</th>
+          </tr>
+        </thead>
+        <tbody class="body">
+          <tr *ngFor="let p of paginatedDetalles; index as i">
+            <td>{{ p.codigo }}</td>
+            <td>{{ p.nombre }}</td>
+            <td>
+              <input type="number" [(ngModel)]="p.cant" (ngModelChange)="actualizarSubtotal(p)"
+              class="form-control form-control-sm text-center mx-auto" min="1" style="width: 55px;"/>
+            </td>
+            <td>{{ p.precio }}</td>
+            <td>{{ p.subtotal }}</td>
+            <td>
+            <button class="actions" (click)="aumentarCantidad(p)" title="Aumentar"><i
+                class="bi bi-plus-lg"></i></button>
+            <button class="actions" (click)="disminuirCantidad(p)" title="Disminuir"><i
+                class="bi bi-dash-lg"></i></button>
+            <button class="actions" (click)="eliminarElemento(p.codigo)"><i class="bi bi-trash-fill"></i></button>
+          </td>
+          </tr>
+        </tbody>
+      </table>
+      <div class="position-absolute text-end" style="right: 1.5rem; bottom: 1.5rem">
+        <div style="font-size: 0.85rem">
+          <div><strong>IGV:</strong> S/ <span id="igv">{{igv}}</span></div>
+          <div class="mb-2">
+            <strong>Total:</strong> S/ <span id="total">{{ total }}</span>
+          </div>
+        </div>
+        <button class="btn btn-success" (click)="crearVenta()">Generar Comprobante</button>
+      </div>
+
+      <nav *ngIf="totalPages > 1" class="mt-3" aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <a class="page-link" (click)="changePage(currentPage - 1)">Anterior</a>
+        </li>
+        <li class="page-item"
+            *ngFor="let page of [].constructor(totalPages); let i = index"
+            [class.active]="currentPage === i + 1">
+          <a class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <a class="page-link" (click)="changePage(currentPage + 1)">Siguiente</a>
+        </li>
+      </ul>
+    </nav>
+
+      <!-- MODAL AGREGAR -->
+
+      <div class="modal fade modal-lg" id="modalAdd" tabindex="-1" aria-labelledby="modalAdd" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="modalAdd">Registrar Venta</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"
+                (click)="clearSearch()"></button>
+            </div>
+            <div class="modal-body">
+              <form class="row g-3">
+                <!-- Buscar Producto/Servicio -->
+                <div class="col-12">
+                  <label class="form-label">Producto/Servicio</label>
+                  <div class="dropdown input-group">
+                    <input type="text" class="form-control dropdown-toggle" id="dropdownInput" data-bs-toggle="dropdown"
+                      aria-expanded="false" placeholder="Buscar Producto" [(ngModel)]="searchTerm" name="busqueda"
+                      (ngModelChange)="onElementChange($event)" [attr.data-bs-auto-close]="'outside'" />
+
+                    <button *ngIf="searchTerm" type="button" class="btn btn-outline-secondary" (click)="clearSearch()">
+                      <i class="bi bi-x-circle"></i>
+                    </button>
+
+                <ul
+                  class="dropdown-menu"
+                  id="dropdownOptions"
+                  style="width: 100%"
+                >
+                  <li *ngFor="let elemento of filteredDatos">
+                    <a
+                      class="dropdown-item"
+                      (click)="onSelectElement(elemento)"
+                    >
+                      {{ elemento.codigo }} - {{ elemento.nombre }}
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+                <!-- Cantidad -->
+                <div class="col-md-4">
+                  <label for="inputCantidad" class="form-label">Cantidad</label>
+                  <input type="number" class="form-control" id="inputCantidad" value="1" min="1" name="cantidad"
+                    [(ngModel)]="cantidad" (ngModelChange)="onValueSubTotal()" [disabled]="LugarSeleccionado" />
+                </div>
+
+                <!-- Precio Unitario -->
+                <div class="col-md-4">
+                  <label for="inputPrecio" class="form-label">Precio Unitario</label>
+                  <input type="number" class="form-control" id="inputPrecio" [(ngModel)]="precioSeleccionado" min="0"
+                    [readonly]="true" name="precioSeleccionado" />
+                  <!-- Esto hace que el campo sea solo lectura -->
+                </div>
+
+                <!-- Total -->
+                <div class="col-md-4">
+                  <label for="inputTotal" class="form-label">Total</label>
+                  <input type="number" class="form-control" id="inputTotal" name="total" [(ngModel)]="subtotal"
+                    [value]="subtotal" readonly />
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="clearSearch()">
+                Cancelar
+              </button>
+              <button type="button" class="btn btn-success" (click)="onRegisterElement()">
+                Registrar
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- MODAL NUEVO CLIENTE -->
+      <div class="modal fade" id="modalNuevoCliente" tabindex="-1" aria-labelledby="modalNuevoClienteLabel"
+        aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h5 class="modal-title" id="modalNuevoClienteLabel">Nuevo Cliente</h5>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Cerrar"></button>
+            </div>
+
+            <div class="modal-body">
+              <form class="row g-3" [formGroup]="clienteForm" (ngSubmit)="registrarCliente()">
+                <!-- Tipo de documento -->
+                <div class="col-md-12">
+                  <label for="tipoDocumento" class="form-label">Tipo de Documento</label>
+                  <select id="tipoDocumento" class="form-select" formControlName="tipoDoc">
+                    <option value="DNI" selected>DNI</option>
+                    <option value="RUC">RUC</option>
+                  </select>
+                </div>
+
+                <!-- Número de documento -->
+                <div class="col-md-12">
+                  <label for="numeroDocumento" class="form-label">Número de Documento</label>
+                  <input type="text" class="form-control" id="numeroDocumento" formControlName="nroDoc" />
+                </div>
+
+                <!-- Nombre -->
+                <div class="col-md-12">
+                  <label for="nombreCliente" class="form-label">Nombre</label>
+                  <input type="text" class="form-control" id="nombreCliente" formControlName="nombre" />
+                </div>
+
+                <!-- Telefono -->
+                <div class="col-md-6">
+                    <label for="inputTelefono" class="form-label">Telefono</label>
+                    <input type="text" class="form-control" id="inputTelefono" formControlName="telefono">
+                </div>
+                
+                <!-- Correo -->
+                <div class="col-md-6">
+                    <label for="inputCorreo" class="form-label">Correo</label>
+                    <input type="text" class="form-control" id="inputCorreo" placeholder="&#64;gmail.com / &#64;hotmail.com / &#64;outlook.es" formControlName="correo">
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="resetFormulario()">
+                    Cancelar
+                  </button>
+                  <button type="submit" [disabled]="clienteForm.invalid" class="btn btn-success"
+                    data-bs-dismiss="modal">
+                    Registrar
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+</main>

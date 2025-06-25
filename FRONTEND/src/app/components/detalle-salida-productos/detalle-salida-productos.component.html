@@ -1,0 +1,107 @@
+<app-header />
+<app-sidebar />
+
+<main class="main-content">
+  <div class="separador">
+    <div class="header-title">
+      <a href="/salidas"><i class="bi bi-arrow-bar-left"></i>Regresar</a>
+      <p class="title">Detalle salida</p>
+    </div>
+
+    <div class="formulario">
+      <form class="row g-3" [formGroup]="salidaForm">
+        <!-- Tipo Operación -->
+        <div class="col-md-2">
+            <label for="inputNro" class="form-label">Tipo Operación</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inputNro"
+              formControlName="tipoOperacion"
+            />
+          </div>
+
+            
+        <!--fecha salida-->
+        <div class="col-md-2">
+            <label for="inputEmision" class="form-label">Fecha de Salida</label>
+            <div class="input-group">
+              <span class="input-group-text">
+                <i class="bi bi-calendar-event"></i>
+              </span>
+              <input
+                type="text"
+                class="form-control"
+                id="inputEmision"
+                formControlName="fechaSalida"
+              />
+            </div>
+          </div>
+          <!--cantidad total-->
+          <div class="col-md-1">
+            <label for="inputCantTotal" class="form-label">Cantidad total</label>
+            <input
+              type="text"
+              class="form-control"
+              id="inputCantTotal"
+              formControlName="cantidadTotal"
+            />
+          </div>
+
+          <div formGroupName="ventaId" class="row g-3">
+            <!-- Tipo Comprobante -->
+            <div class="col-md-5">
+              <label for="inputComprobante" class="form-label">Tipo de Comprobante</label>
+              <select
+                id="inputComprobante"
+                class="form-select"
+                formControlName="tipoComprobante"
+              >
+                <option value="BOLETA DE VENTA ELECTRONICA">BOLETA DE VENTA ELECTRONICA</option>
+                <option value="FACTURA DE VENTA ELECTRONICA">FACTURA DE VENTA ELECTRONICA</option>
+              </select>
+            </div>
+          
+            <!-- Serie -->
+            <div class="col-md-1">
+              <label for="inputSerie" class="form-label">Serie</label>
+              <input
+                type="text"
+                class="form-control"
+                id="inputSerie"
+                formControlName="serie"
+              />
+            </div>
+          
+            <!-- Nro Comprobante -->
+            <div class="col-md-2">
+              <label for="inputNro" class="form-label">N° Comprobante</label>
+              <input
+                type="text"
+                class="form-control"
+                id="inputNro"
+                formControlName="nroComprobante"
+              />
+            </div>
+          </div>
+      </form>
+    </div>
+
+    <table class="table">
+      <thead>
+        <tr class="header">
+          <th scope="col">Codigo</th>
+          <th scope="col">Producto</th>
+          <th scope="col">Cantidad</th>
+        </tr>
+      </thead>
+      <tbody class="body">
+        <tr *ngFor="let detalle of detallesVenta.controls">
+            <td>{{ detalle.get('codigo')?.value }}</td>
+            <td>{{ detalle.get('producto')?.value }}</td>
+            <td>{{ detalle.get('cantidad')?.value }}</td>
+        </tr>
+      </tbody>      
+    </table>
+  </div>
+</main>

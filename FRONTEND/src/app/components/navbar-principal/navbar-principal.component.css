@@ -1,0 +1,137 @@
+.header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 70px;
+    width: 100%;
+    background-color: #10401b;
+    padding: 20px;
+    display: flex;
+    justify-content: space-between; 
+    z-index:1000;
+}
+
+.header-title {
+    text-decoration: none;
+}
+
+.title {
+    font-weight: bold;
+    font-size: 20px;
+    color: rgb(255, 255, 255);
+    text-decoration: none;
+}
+
+.userText {
+    text-decoration: none;
+    color: rgb(255, 255, 255);
+    font-weight: 500;
+    font-size: 16px;
+}
+
+.dropdown-menu {
+    box-decoration-break: none;
+    border: 0;
+    background-color: rgb(255, 255, 255);
+}
+
+.dropdown-item {
+    text-decoration: none;
+    color: rgb(38, 38, 38);
+    font-size: 12px;
+}
+
+.dropdown-item:hover {
+    background-color: rgb(255, 255, 255);
+}
+
+.navbar {
+    background-color: #ffffff;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    border-bottom: 1px solid #dee2e6;
+    margin-top: 70px;
+    width: 100%;
+    z-index: 10;
+    position: fixed;
+}
+
+.text-dark {
+    font-size: 16px;
+}
+
+.info {
+    margin-inline-end: 40px;
+}
+
+.car i {
+    color: #10401b;
+    cursor: pointer;
+    position: relative;
+}
+
+.form-control {
+    width: 500px;
+}
+
+.d-block {
+    font-size: 14px;
+    color: black;
+    text-decoration: none;
+}
+
+.badge {
+    position: absolute;
+    top: 3px;
+    right: 5px;
+    font-size: 12px;
+}
+
+@media (max-width: 768px) {
+    .info-gen {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+  
+    .info, .dropdown {
+      margin-right: 0;
+      margin-bottom: 5px;
+    }
+  
+    .header-title {
+      margin-bottom: 10px;
+    }
+
+    .title {
+        font-weight: bold;
+        font-size: 16px;
+        color: rgb(255, 255, 255);
+        text-decoration: none;
+    }
+
+    .userText {
+        font-size: 12px;
+    }
+
+    .header {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 90px;
+        width: 100%;
+        background-color: #10401b;
+        padding: 20px;
+        display: flex;
+        justify-content: space-between; 
+        z-index:1000;
+    }
+
+    .navbar {
+        margin-top: 90px;
+        z-index: 10;
+        position: relative;
+    }
+  }

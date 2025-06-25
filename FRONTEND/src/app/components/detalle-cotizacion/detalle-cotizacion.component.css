@@ -1,0 +1,91 @@
+.main-content{
+    height: 100%;
+    margin-left: 300px;
+    padding: 20px;
+}
+
+.separador{
+    margin-top:70px;
+}
+
+.header-title a {
+    font-size: 15px;
+    margin-bottom:10px ;
+    text-decoration: none;
+    color:grey
+}
+
+.header-title i {
+    font-size: 15px;
+    color:grey
+}
+
+.title {
+    font-size: 20px;
+}
+
+.form-label {
+    font-size: 12px;
+}
+
+.form-select {
+    font-size: 12px;
+}
+
+.form-control {
+    font-size: 12px;
+}
+
+.button-agregar{
+    margin-top: 20px;
+}
+
+.table {
+    margin-top: 20px;
+    border-color: black;
+    text-align: center;
+}
+
+.header {
+    font-size: 12px;
+}
+
+.body {
+    font-size: 12px;
+}
+
+.btn {
+    background-color: #10401b;
+    color: white;
+    font-size: 12px;
+}
+
+.newProveedor {
+    text-decoration: none;
+    color: grey;
+    font-weight: bold;
+}
+
+.input-group-text {
+    font-size: 12px;
+}
+
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+  font-size: 13px;
+  text-align: center;
+}
+
+.styled-table thead th {
+  border-bottom: 1px solid #ccc; /* línea tenue en el header */
+  font-weight: bold;
+  padding: 8px;
+}
+
+.styled-table tbody td {
+  padding: 8px;
+  border-bottom: 1px solid #eee; /* líneas sutiles entre filas */
+  vertical-align: middle;
+}

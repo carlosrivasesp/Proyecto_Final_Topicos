@@ -1,0 +1,96 @@
+<app-header/>
+<app-sidebar/>
+
+<main class="main-content">
+  <div class="separador">
+    <p class="title">Ingreso de productos</p>
+
+    <div class="filter">
+        <div class="group1">
+            <p class="description">Filtrar por: </p>
+
+            <div class="dropdown">
+              <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+                {{ selectedFilter | uppercase }}
+              </button>
+              <ul class="dropdown-menu">
+                <li><a class="dropdown-item" (click)="selectedFilter = 'tipoOperacion'">Tipo Operacion</a></li>
+                <li><a class="dropdown-item" (click)="selectedFilter = 'compra'">Compra</a></li>
+                <li><a class="dropdown-item" (click)="selectedFilter = 'venta'">Venta</a></li>
+                <li><a class="dropdown-item" (click)="selectedFilter = 'fecha'">Fecha de Ingreso</a></li>
+              </ul>
+            </div>
+            
+        </div>
+
+        <div class="group2">
+          <div class="input-group">
+            <input type="text" class="form-control" [(ngModel)]="searchTerm" placeholder="Buscar">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+        </div>
+        </div>        
+    </div>
+
+
+    <table class="table">
+        <thead>
+          <tr class="header">
+            <th scope="col" style="width: 200px;">Tipo Operación</th>
+            <th scope="col" style="width: 250px;">Tipo de Comprobante</th>
+            <th scope="col" style="width: 110px;">Serie</th>
+            <th scope="col" style="width: 150px;">Nro Comprobante</th>
+            <th scope="col" style="width: 150px;">Cantidad Total</th>
+            <th scope="col" style="width: 150px;">Fecha de Ingreso</th>
+            <th scope="col" style="width: 80px;">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="body">
+          <tr *ngFor="let ingreso of paginated">
+            <td>{{ ingreso.tipoOperacion }} </td>
+            <td>{{ ingreso.compraId?.tipoComprobante || ingreso.ventaId?.tipoComprobante}}</td>
+            <td>{{ ingreso.compraId?.serie || ingreso.ventaId?.serie}}</td>
+            <td>{{ ingreso.compraId?.nroComprobante || ingreso.ventaId?.nroComprobante }}</td>
+            <td>{{ ingreso.cantidadTotal }}</td>
+            <td>{{ ingreso.fechaIngreso ? (ingreso.fechaIngreso | date: 'dd/MM/yyyy') : 'Sin fecha' }}</td>
+            <td>
+              <a
+                class="actions"
+                role="button"
+                data-bs-toggle="dropdown"
+                aria-expanded="false"
+              >
+                <button><i class="bi bi-three-dots-vertical"></i></button>
+              </a>
+  
+              <ul class="dropdown-menu">
+                <li>
+                  <a
+                    class="dropdown-item"
+                    [routerLink]="['/detalle-ingreso-prod', ingreso._id]"
+                    >Ver Detalles</a
+                  >
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+    </table>
+
+    <nav *ngIf="totalPages > 1" class="mt-3" aria-label="Page navigation">
+      <ul class="pagination justify-content-center">
+        <li class="page-item" [class.disabled]="currentPage === 1">
+          <a class="page-link" (click)="changePage(currentPage - 1)">Anterior</a>
+        </li>
+        <li class="page-item"
+            *ngFor="let page of [].constructor(totalPages); let i = index"
+            [class.active]="currentPage === i + 1">
+          <a class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</a>
+        </li>
+        <li class="page-item" [class.disabled]="currentPage === totalPages">
+          <a class="page-link" (click)="changePage(currentPage + 1)">Siguiente</a>
+        </li>
+      </ul>
+    </nav>
+  </div>
+  
+</main>

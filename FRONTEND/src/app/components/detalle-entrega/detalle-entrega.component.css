@@ -1,0 +1,118 @@
+.main-content{
+    height: 100%;
+    margin-left: 300px;
+    padding: 20px;
+}
+
+.separador{
+margin-top: 70px;
+}
+
+.title {
+    font-size: 20px;
+}
+
+.filter {
+    display: flex;
+    justify-content: flex-start;   
+}
+
+.group1 {
+    display: flex;
+}
+
+.group2 {
+    margin-left: 40px;
+}
+
+.group3 {
+    margin-left: 80px;
+}
+.group4 {
+    margin-left: 450px;
+}
+.group4 a{
+    text-decoration: none;
+    color: white;
+}
+.description {
+    font-size: 12px;
+    color: rgb(75, 75, 75);
+}
+
+.dropdown {
+    margin-left: 20px;
+}
+
+.btn.dropdown-toggle {
+    border-radius: 7px;
+    border-width: 0.05px;
+    border-color: rgb(211, 211, 211);
+    font-size: 12px;
+    color: rgb(75, 75, 75);
+}
+
+.dropdown-item {
+    font-size: 12px;
+    color: rgb(75, 75, 75);
+}
+
+.input-group {
+    width: 130%;
+}
+
+.form-control {
+    font-size: 12px;
+}
+
+.table {
+    margin-top: 20px;
+    border-color: #727374;
+    table-layout: fixed;
+    width: 100%;
+    text-align: start;
+}
+
+.table th, .table td {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/*
+thead tr.header th {
+  background-color: #667068; 
+  color: white;
+  font-weight: bold;
+  font-size: 12px;
+}
+*/
+
+thead tr.header th {
+  font-size: 12px;
+}
+
+.body {
+    font-size: 11px;
+}
+
+
+.modal-body {
+    font-size: 12px;
+}
+
+.form-label {
+    font-size: 12px;
+}
+
+.form-select {
+    font-size: 12px;
+}
+
+.btn {
+    font-size: 12px;
+}
+
+.input-group-text {
+    font-size: 12px;
+}

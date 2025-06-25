@@ -1,0 +1,172 @@
+<app-header/>
+<app-sidebar/>
+
+<main class="main-content">
+  <div class="separador">
+      <p class="title">Listado de categorías</p>
+
+      <div class="filter">
+        <div class="group1">
+          <p class="description">Filtrar por: </p>
+
+          <div class="dropdown">
+            <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false">
+              {{ selectedFilter | uppercase }}
+            </button>
+            <ul class="dropdown-menu">
+              <li><a class="dropdown-item" (click)="selectedFilter = 'nombre'">Nombre</a></li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="group2">
+          <div class="input-group">
+            <input type="text" class="form-control" [(ngModel)]="searchTerm" placeholder="Buscar">
+            <span class="input-group-text"><i class="bi bi-search"></i></span>
+          </div>
+        </div>
+
+        <div class="group3">
+          <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAdd" (click)="resetFormulario()">
+            <i class="bi bi-plus"></i>
+          </button>
+        </div>
+      </div>
+
+      <table class="table">
+        <thead>
+          <tr class="header">
+            <th scope="col" style="width: 250px;">Nombre</th>
+            <th scope="col" style="width: 350px;">Descripcion</th>
+            <th scope="col" style="width: 80px;">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="body">
+          <tr *ngFor="let categoria of paginated">
+            <td>{{categoria.nombre}}</td>
+            <td>{{categoria.descripcion}}</td>
+            <td>
+              <a class="actions" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                <button><i class="bi bi-three-dots-vertical"></i></button>
+              </a>
+              <ul class="dropdown-menu">
+                <li>
+                  <a class="dropdown-item" data-bs-toggle="modal" data-bs-target="#modalEdit" (click)="editarCategoria(categoria)">Editar</a>
+                </li>
+              </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <nav *ngIf="totalPages > 1" class="mt-3" aria-label="Page navigation">
+        <ul class="pagination justify-content-center">
+          <li class="page-item" [class.disabled]="currentPage === 1">
+            <a class="page-link" (click)="changePage(currentPage - 1)">Anterior</a>
+          </li>
+          <li class="page-item"
+              *ngFor="let page of [].constructor(totalPages); let i = index"
+              [class.active]="currentPage === i + 1">
+            <a class="page-link" (click)="changePage(i + 1)">{{ i + 1 }}</a>
+          </li>
+          <li class="page-item" [class.disabled]="currentPage === totalPages">
+            <a class="page-link" (click)="changePage(currentPage + 1)">Siguiente</a>
+          </li>
+        </ul>
+      </nav>
+
+  </div>
+
+      <!-- MODAL AGREGAR -->
+      <div class="modal fade modal-lg" id="modalAdd" tabindex="-1" aria-labelledby="modalAdd" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="modalAdd">Registrar Categoría</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form class="row g-3" [formGroup]="categoriaForm" (ngSubmit)="registrarCategoria()">
+
+                <div class="col-md-6">
+                  <label for="inputCategoria" class="form-label">Categoría</label>
+                  <input type="text" class="form-control" id="inputCategoria" formControlName="nombre">
+                  <div class="text-danger" *ngIf="categoriaForm.get('nombre')?.hasError('required') && categoriaForm.get('nombre')?.touched">
+                    <span>Debe ingresar el nombre de la categoría</span>
+                  </div>
+                  
+                </div>
+                <div class="col-md-6">
+                  <label for="inputDescripcion" class="form-label">Descripcion</label>
+                  <input type="text" class="form-control" id="inputDescripcion" formControlName="descripcion">
+                  <div class="text-danger" *ngIf="categoriaForm.get('descripcion')?.hasError('required') && categoriaForm.get('descripcion')?.touched">
+                    <span>Debe ingresar una descripción</span>
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="resetFormulario()">Cancelar</button>
+                  <button type="submit" [disabled]="categoriaForm.invalid" class="btn btn-success" data-bs-dismiss="modal">Registrar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL EDITAR -->
+      <div class="modal fade modal-lg" id="modalEdit" tabindex="-1" aria-labelledby="modalEdit" aria-hidden="true">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h1 class="modal-title fs-5" id="modalEdit">Modificar Categoría</h1>
+              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+              <form class="row g-3" [formGroup]="categoriaForm">
+
+                <div class="col-md-6">
+                  <label for="inputCategoria" class="form-label">Categoría</label>
+                  <input type="text" class="form-control" id="inputCategoria" formControlName="nombre">
+                </div>
+
+                <div class="col-md-6">
+                  <label for="inputDescripcion" class="form-label">Descripcion</label>
+                  <input type="text" class="form-control" id="inputDescripcion" formControlName="descripcion">
+                  <div class="text-danger" *ngIf="categoriaForm.get('descripcion')?.hasError('required') && categoriaForm.get('descripcion')?.touched">
+                    <span>Debe ingresar una descripción</span>
+                  </div>
+                </div>
+
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal" (click)="resetFormulario()">Cancelar</button>
+                  <button type="button" class="btn btn-success" (click)="actualizarCategoria()" data-bs-dismiss="modal">Aceptar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- MODAL ELIMINAR -->
+
+      <div class="modal fade" id="modalDelete" tabindex="-1" aria-labelledby="modalDelete" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+          <div class="modal-content">
+            <div class="modal-body">
+              <form>
+                <div class="mb-3">
+                  <p>¿Estás seguro que deseas eliminar la categoría?</p>
+                </div>
+              </form>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">No</button>
+              <button type="button" class="btn btn-danger">Sí, eliminar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    
+</main>
+
