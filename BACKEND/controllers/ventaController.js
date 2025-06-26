@@ -11,6 +11,15 @@ const ExcelJS = require('exceljs');
 const sugerirCompraSiEsNecesario = require('../utils/sugerirCompra');
 const devolucionProducto = require("../models/devolucionProducto");
 
+const fs = require('fs');
+const path = require('path');
+
+const enviarPorWhatsapp = require('../utils/enviarWsp');
+const sugerirCompraSiEsNecesario = require('../utils/sugerirCompra');
+const uploadFileToDrive = require('../utils/driveUploader');
+const generarPDFVenta = require('../utils/pdf');
+const { enviarComprobanteZapier } = require('../utils/zapier');
+
 exports.registrarVenta = async (req, res) => {
     try {
       const { detalles: productos, tipoComprobante, metodoPago, lugarId, cliente} = req.body;
@@ -453,5 +462,83 @@ exports.actualizarVenta = async (req, res) => {
   } catch (error) {
     console.log(error);
     res.status(500).json({ mensaje: "Error al actualizar la venta", error });
+  }
+};
+
+exports.enviarComprobantePorWhatsapp = async (req, res) => {
+  try {
+    const ventaId = req.params.id;
+    console.log('ID de venta:', ventaId);
+
+    const venta = await Venta.findById(ventaId)
+      .populate({
+        path: 'detalles',
+        populate: { path: 'producto', select: 'nombre precio' }
+      })
+      .populate('cliente', 'nombre tipoDoc nroDoc telefono correo').populate('lugar');
+
+    if (!venta) {
+      return res.status(404).json({ mensaje: 'Venta no encontrada' });
+    }
+    console.log('Venta encontrada:', venta);
+
+    const { detalles, cliente } = venta;
+
+    if (!cliente.telefono) {
+      return res.status(400).json({ mensaje: 'El cliente no tiene número de teléfono registrado' });
+    }
+    console.log('Teléfono cliente:', cliente.telefono);
+
+    let telefonoParaWhatsapp = cliente.telefono;
+    if (!telefonoParaWhatsapp.startsWith('+')) {
+      telefonoParaWhatsapp = '+51' + telefonoParaWhatsapp;
+    }
+    console.log('Teléfono formateado para WhatsApp:', telefonoParaWhatsapp);
+
+    const ventasDir = path.join(__dirname, '..', 'ventas');
+    if (!fs.existsSync(ventasDir)) {
+      fs.mkdirSync(ventasDir);
+      console.log('Carpeta ventas creada');
+    }
+
+    const fileName = `${venta._id}.pdf`;
+    const filePath = path.join(ventasDir, fileName);
+
+    await generarPDFVenta(venta, detalles, cliente, filePath);
+    console.log('PDF generado en:', filePath);
+
+    const driveResult = await uploadFileToDrive(filePath, fileName, process.env.DRIVE_FOLDER_ID);
+    console.log('Archivo subido a Google Drive:', driveResult);
+
+    const mediaUrl = driveResult.webViewLink;
+    console.log('Enlace para enviar:', mediaUrl);
+
+    await enviarPorWhatsapp(
+      telefonoParaWhatsapp,
+      '¡Hola! Aquí tienes tu comprobante de venta 📄',
+      mediaUrl
+    );
+    console.log('Mensaje enviado por WhatsApp');
+    
+    // ⬇️ INTEGRACIÓN con Zapier
+    await enviarComprobanteZapier({
+      fecha: venta.fechaEmision,
+      cliente: cliente.nombre,
+      telefono: telefonoParaWhatsapp,
+      tipoComprobante: venta.tipoComprobante,
+      numeroComprobante: venta.nroComprobante,
+      monto: venta.total, 
+      comprobanteURL: mediaUrl
+    });
+
+    fs.unlinkSync(filePath);
+
+    res.json({ mensaje: 'Comprobante enviado por WhatsApp exitosamente ✅' });
+  } catch (error) {
+    console.error('Error al enviar comprobante:', error);
+    res.status(500).json({
+      mensaje: 'Error al enviar comprobante por WhatsApp',
+      error: error.message,
+    });
   }
 };
