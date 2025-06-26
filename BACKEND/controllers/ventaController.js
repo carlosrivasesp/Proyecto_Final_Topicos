@@ -15,7 +15,6 @@ const fs = require('fs');
 const path = require('path');
 
 const enviarPorWhatsapp = require('../utils/enviarWsp');
-const sugerirCompraSiEsNecesario = require('../utils/sugerirCompra');
 const uploadFileToDrive = require('../utils/driveUploader');
 const generarPDFVenta = require('../utils/pdf');
 const { enviarComprobanteZapier } = require('../utils/zapier');
