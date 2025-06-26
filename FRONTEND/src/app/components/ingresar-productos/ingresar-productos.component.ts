@@ -3,7 +3,6 @@ import { IngresoService } from '../../services/ingreso.service';
 import { Ingreso } from '../../models/ingreso';
 import { Producto } from '../../models/producto';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ToastrService } from 'ngx-toastr';
 import { ProductoService } from '../../services/producto.service';
 
 @Component({
@@ -21,7 +20,6 @@ export class IngresarProductosComponent {
   searchTerm: string = '';
 
   constructor(
-    private toastr: ToastrService,
     private _ingresoService: IngresoService,
     private productoService: ProductoService
   ) {
