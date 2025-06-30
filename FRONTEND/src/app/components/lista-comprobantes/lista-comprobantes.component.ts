@@ -117,30 +117,6 @@ export class ListaComprobantesComponent implements OnInit {
       }
     });
   }
-
-  VentaADevolver: any; 
-
-  setVentaADevolver(venta: any): void {
-    this.VentaADevolver = venta;
-  }
-
-  devolverVenta(venta: Venta): void {  
-    const ventaActualizada = {
-      ...venta,
-      estado: 'Devolución'
-    };
-  
-    this._ventaService.editarVenta(venta._id!, ventaActualizada).subscribe({
-      next: () => {
-        this.toastr.info('Comprobante modificado correctamente', 'Devolución');
-        this.obtenerVentas();
-      },
-      error: (error) => {
-        console.error(error);
-        this.toastr.error('No se pudo modificar el comprobante', 'Error');
-      }
-    });
-  }
   
 
   get filteredVentas(): Venta[] {
@@ -157,10 +133,6 @@ export class ListaComprobantesComponent implements OnInit {
           s.fechaEmision
             ? this.formatDate(s.fechaEmision).includes(term)
             : false
-        );
-      case 'estado':
-        return this.listVentas.filter((v) =>
-          v.estado.toLowerCase().includes(term)
         );
       default:
         return this.listVentas;
