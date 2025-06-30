@@ -53,7 +53,9 @@ export class ListaComprobantesComponent implements OnInit {
 
   obtenerVentas(): void {
     this._ventaService.getAllVentas().subscribe({
-      next: (data) => (this.listVentas = data.reverse()),
+      next: (data) => (
+      this.listVentas = data.slice().reverse() 
+      ),
       error: (err) => {
         console.error(err);
         this.toastr.error('Error al obtener las ventas', 'Error');
