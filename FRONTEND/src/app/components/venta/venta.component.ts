@@ -5,7 +5,7 @@ import { Producto } from '../../models/producto';
 import { Lugar } from '../../models/lugar';
 import { LugarService } from '../../services/lugar.service';
 import { forkJoin } from 'rxjs';
-import { FormBuilder, FormGroup, NgModel, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, NgModel, Validators , FormArray } from '@angular/forms';
 import { Cliente } from '../../models/cliente';
 import { ActivatedRoute, Router } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
@@ -123,6 +123,8 @@ export class VentaComponent implements OnInit {
   }
 
   crearVenta(): void {
+
+
     if (!this.clienteSeleccionado || this.elementosRegistrados.length === 0) {
       this.toastr.error('Debe seleccionar un cliente y agregar al menos un producto.', 'Error');
       return;
@@ -190,6 +192,57 @@ export class VentaComponent implements OnInit {
       next: (respuesta) => {
         this.toastr.success('Venta registrada correctamente', 'Éxito');
         this.router.navigate(['/comprobantes']);
+
+              this.elementosRegistrados = [];
+      this.total = 0;
+      this.igv = 0;
+      this.subtotal = 0;
+      this.cantidad = 1;
+      this.precioSeleccionado = 0;
+      this.LugarSeleccionado = false;
+      this.searchTerm = '';
+      this.clienteSearchTerm = '';
+      this.elementoSeleccionado = null;
+      this.clienteSeleccionado = null;
+      (this as any).stockDisponible = 0; // Casteo a any si es necesario para esta propiedad
+
+      // Resetea el formulario principal (ventaForm)
+      this.ventaForm.reset({
+        serie: 'B01', // Puedes mantener valores por defecto si los tienes
+        nroComprobante: '',
+        fechaEmision: this.getTodayString(), // Asumiendo que tienes este método
+        tipoComprobante: 'BOLETA DE VENTA ELECTRONICA',
+        fechaVenc: this.getTodayString(), // Asumiendo que tienes este método
+        total: 0,
+        estado: 'Pendiente',
+        moneda: 'S/',
+        tipoCambio: '3.66',
+        cliente: '', // Resetea a string vacío o a null si no tiene valor por defecto
+        metodoPago: '',
+        // Los detalles del FormArray deben ser limpiados si son un FormArray.
+        // Si 'detalles' es un FormArray, esto lo limpiaría:
+        detalles: [] // Si es un FormArray, asegúrate de que el control esté vacío o se limpie
+      });
+
+      // Si 'detalles' es un FormArray, también puedes limpiarlo así:
+      const detallesFormArray = this.ventaForm.get('detalles') as FormArray;
+      while (detallesFormArray && detallesFormArray.length !== 0) {
+        detallesFormArray.removeAt(0);
+      }
+
+
+      // Resetea el formulario del cliente (clienteForm)
+      this.clienteForm.reset({
+        nombre: '',
+        tipoDoc: '',
+        nroDoc: '',
+        telefono: { value: '', disabled: true },
+        correo: { value: '', disabled: true }
+      });
+
+
+      // ===>>> FIN DEL BLOQUE DE RESETEO <<<===
+
       },
       error: (err) => {
         console.error('Error al registrar la venta', err);
@@ -404,51 +457,47 @@ export class VentaComponent implements OnInit {
   }
 
   //registra el elemento
-  onRegisterElement(): void {
-    if (!this.elementoSeleccionado) return;
+ onRegisterElement(): void {
+    if (this.elementoSeleccionado && this.cantidad > 0 && this.precioSeleccionado > 0) {
+      const subtotalItem = this.cantidad * this.precioSeleccionado;
 
-    const element = this.elementoSeleccionado;
+      const nuevoElemento: ElementoRegistrado = {
+        codigo: this.elementoSeleccionado.codigo,
+        nombre: this.elementoSeleccionado.nombre,
+        cant: this.cantidad,
+        precio: this.precioSeleccionado,
+        subtotal: subtotalItem
+      };
 
-    // Si es un producto
-    if (element.tipo === 'producto') {
-      const productoExistente = this.elementosRegistrados.find(p => p.codigo === element.codigo);
+      this.elementosRegistrados.push(nuevoElemento);
+      console.log('DEBUG - Elementos Registrados (después de push):', this.elementosRegistrados);
 
-      if (productoExistente) {
-        productoExistente.cant += this.cantidad;
-        productoExistente.subtotal = productoExistente.cant * productoExistente.precio;
-      } else {
-        this.elementosRegistrados.push({
-          codigo: element.codigo,
-          nombre: element.nombre,
-          cant: this.cantidad,
-          precio: element.valor,
-          subtotal: this.cantidad * element.valor
-        });
-      }
+      // --- CALCULOS DE TOTALES ---
+      // IMPORTANTE: Asegúrate de que NO haya ningún reseteo de subtotal, igv, total o elementosRegistrados
+      // en las líneas inmediatamente después de este bloque de cálculo.
+      // Si tienes un this.subtotal = 0; o this.elementosRegistrados = []; por aquí, BÓRRALO o COMENTALO.
+      
+      this.subtotal = parseFloat((this.elementosRegistrados.reduce((acc, item) => acc + item.subtotal, 0)).toFixed(2));
+      this.igv = parseFloat((this.subtotal * 0.18).toFixed(2));
+      this.total = parseFloat((this.subtotal + this.igv).toFixed(2));
 
-      // Si es un lugar
+      // Debug logs de verificación
+      console.log('DEBUG - Después de calcular (en el componente): subtotal total:', this.subtotal);
+      console.log('DEBUG - Después de calcular (en el componente): IGV total:', this.igv);
+      console.log('DEBUG - Después de calcular (en el componente): Total final:', this.total);
+
+      // --- RESETEO DE CAMPOS DE ENTRADA INDIVIDUALES (NO DE TOTALES ACUMULADOS) ---
+      // Estos son los únicos reseteos que deberían estar aquí.
+      this.searchTerm = '';
+      this.elementoSeleccionado = null; // Esto resetea el objeto seleccionado para el siguiente ingreso
+      this.cantidad = 1;
+      this.precioSeleccionado = 0;
+      this.LugarSeleccionado = false; // Asumiendo que esta es una bandera de estado
+      // Asegúrate de que NO haya líneas como this.subtotal = 0; aquí.
+
     } else {
-      const yaExiste = this.elementosRegistrados.some(p => p.codigo === element.codigo);
-      if (yaExiste) {
-        this.toastr.warning('Este lugar ya fue agregado.', 'Advertencia');
-        return;
-      }
-
-      this.elementosRegistrados.push({
-        codigo: element.codigo,
-        nombre: element.nombre,
-        cant: 1,
-        precio: element.valor,
-        subtotal: element.valor
-      });
+      this.toastr.error('Por favor, selecciona un elemento válido, ingresa una cantidad y un precio.', 'Error al agregar');
     }
-
-    // Recalcular IGV y total
-    const nuevoSubtotal = this.elementosRegistrados.reduce((acc, el) => acc + el.subtotal, 0);
-    this.igv = parseFloat((nuevoSubtotal * 0.18).toFixed(2));
-    this.total = parseFloat((nuevoSubtotal + this.igv).toFixed(2));
-
-    this.clearSearch();
   }
 
   private updateDateTime(): void {

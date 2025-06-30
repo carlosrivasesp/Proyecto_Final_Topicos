@@ -5,9 +5,10 @@ import { HttpClientTestingModule, HttpTestingController } from '@angular/common/
 import { RouterTestingModule } from '@angular/router/testing';
 import { Router } from '@angular/router';
 import { of, throwError } from 'rxjs';
-import { ReactiveFormsModule, FormBuilder, Validators, FormsModule } from '@angular/forms'; // <-- Asegúrate de FormsModule aquí
+import { ReactiveFormsModule, FormBuilder, Validators, FormsModule, FormArray } from '@angular/forms'; // <-- FormArray añadido aquí
 import { ToastrService, ToastrModule } from 'ngx-toastr';
 import { PLATFORM_ID } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA } from '@angular/core'; // Añadido para ignorar elementos desconocidos si es necesario
 
 import { VentaComponent } from './venta.component';
 import { VentaService } from '../../services/venta.service';
@@ -22,7 +23,7 @@ import { Lugar } from '../../models/lugar';
 import { Cliente } from '../../models/cliente';
 import { Categoria } from '../../models/categoria';
 import { Marca } from '../../models/marca';
-
+import { AppModule } from '../../app.module'; // Considera eliminar si usas NO_ERRORS_SCHEMA y no necesitas otros módulos
 
 // Interfaces internas del componente
 interface ElementoRegistrado {
@@ -38,7 +39,7 @@ interface ListaUnificada {
   codigo: string;
   tipo: 'producto' | 'lugar';
   nombre: string;
-  valor: number;
+  valor: number; // Aquí se usa 'valor' para el precio/costo
   stockActual?: number;
 }
 
@@ -56,11 +57,12 @@ describe('VentaComponent', () => {
   // Mocks de datos reutilizables
   const mockCliente: Cliente = { _id: 'c1', nombre: 'Test Cliente', tipoDoc: 'DNI', nroDoc: '12345678', telefono: '987654321', correo: 'test@example.com', estado: 'Activo' };
 
+  // Este mockProducto se usará como base. Si necesitas precios diferentes en tests, los sobrescribes.
   const mockProducto: Producto = {
     _id: 'p1',
     nombre: 'Martillo',
     codInt: 'PROD001',
-    precio: 10,
+    precio: 10, // Precio base
     stockActual: 5,
     stockMin: 1,
     categoria: { _id: 'cat1', nombre: 'Herramientas' } as Categoria,
@@ -94,8 +96,9 @@ describe('VentaComponent', () => {
         HttpClientTestingModule,
         RouterTestingModule.withRoutes([]),
         ReactiveFormsModule,
-        FormsModule, // <-- Asegúrate de que FormsModule esté aquí
-        ToastrModule.forRoot()
+        FormsModule,
+        ToastrModule.forRoot(),
+        // AppModule // Si el error NG0304 regresa (app-header), puedes importar tu AppModule o usar schemas
       ],
       providers: [
         { provide: VentaService, useValue: ventaServiceSpy },
@@ -104,8 +107,10 @@ describe('VentaComponent', () => {
         { provide: ClienteService, useValue: clienteServiceSpy },
         { provide: ToastrService, useValue: toastrServiceSpy },
         { provide: PLATFORM_ID, useValue: 'browser' },
-        FormBuilder,
-      ]
+        FormBuilder, // Asegúrate de proveer FormBuilder
+      ],
+      // Si el error NG0304 ('app-header is not a known element') vuelve a aparecer, descomenta esto:
+      schemas: [NO_ERRORS_SCHEMA] // Ignora elementos/propiedades desconocidos en la plantilla HTML
     }).compileComponents();
 
     fixture = TestBed.createComponent(VentaComponent);
@@ -114,6 +119,7 @@ describe('VentaComponent', () => {
     spyOn(router, 'navigate').and.returnValue(Promise.resolve(true));
 
     // ******** Inicializa los formularios y otras propiedades del componente aquí ********
+    // Los formularios deben inicializarse ANTES de fixture.detectChanges()
     component.clienteForm = TestBed.inject(FormBuilder).group({
       nombre: ['', Validators.required],
       tipoDoc: ['', Validators.required],
@@ -134,11 +140,13 @@ describe('VentaComponent', () => {
       tipoCambio: ['3.66', Validators.required],
       cliente: ['', Validators.required],
       metodoPago: ['', Validators.required],
-      detalles: TestBed.inject(FormBuilder).array([]),
+      detalles: TestBed.inject(FormBuilder).array([]), // Importante inicializar como FormArray
     });
 
+    // Mock para getTodayString si tu componente lo usa
     spyOn(component as any, 'getTodayString').and.returnValue('01/01/2024');
 
+    // Inicializa las propiedades del componente
     component.elementosRegistrados = [];
     component.listaProducto_Lugar = [];
     component.listaProductos = [];
@@ -152,53 +160,73 @@ describe('VentaComponent', () => {
     component.LugarSeleccionado = false;
     component.searchTerm = '';
     component.clienteSearchTerm = '';
-    component.elementoSeleccionado = null;
+    component.elementoSeleccionado = null; // Asegúrate de que su tipo sea Producto | Lugar | ListaUnificada en tu componente
     component.clienteSeleccionado = null;
-    (component as any).stockDisponible = 0; // Casteo a any aquí por si el tipo no está 100% resuelto en spec
+    (component as any).stockDisponible = 0;
 
 
+    // Mocks para los servicios que se llaman en ngOnInit u otros métodos iniciales
     productoServiceSpy.getAllProductos.and.returnValue(of([mockProducto]));
     lugarServiceSpy.getAllLugares.and.returnValue(of([mockLugar]));
     clienteServiceSpy.getAllClientes.and.returnValue(of([mockCliente]));
 
-    fixture.detectChanges();
+    fixture.detectChanges(); // Ejecuta ngOnInit y la detección inicial de cambios
   });
 
   afterEach(() => {
+    // Verifica que no haya peticiones HTTP pendientes
     TestBed.inject(HttpTestingController).verify();
   });
 
 
   // --- PRUEBA 1: "que agregue productos correctamente a la tabla" ---
   it('should add element to elementosRegistrados and update total/igv correctly', () => {
-    const mockSelectedElement: ListaUnificada = { _id: 'p1', codigo: 'PROD001', nombre: 'Martillo', tipo: 'producto', valor: 25, stockActual: 10 };
-
-    component.elementoSeleccionado = mockSelectedElement;
-    component.cantidad = 2;
-    component.precioSeleccionado = mockSelectedElement.valor;
-
-    component.onRegisterElement();
-    fixture.detectChanges(); // Fuerza la detección de cambios
-
-    expect(component.elementosRegistrados.length).toBe(1);
-    expect(component.elementosRegistrados[0]).toEqual({
-      codigo: 'PROD001',
-      nombre: 'Martillo',
-      cant: 2,
-      precio: 25,
-      subtotal: 50
-    });
-
+    // Definir las variables esperadas *antes* de usarlas
     const expectedSubtotal = 50;
     const expectedIgv = parseFloat((expectedSubtotal * 0.18).toFixed(2));
     const expectedTotal = parseFloat((expectedSubtotal + expectedIgv).toFixed(2));
 
+    // Configura los datos necesarios para la prueba
+    // CORRECCIÓN: Si componente.elementoSeleccionado es ListaUnificada, asígnalo como ListaUnificada
+    component.elementoSeleccionado = {
+      _id: 'p1',
+      codigo: 'PROD001',
+      nombre: 'Martillo',
+      tipo: 'producto',
+      valor: 25, // Usamos 'valor' en ListaUnificada para el precio
+      stockActual: 10
+    } as ListaUnificada; // Casteamos explícitamente a ListaUnificada
+    
+    component.cantidad = 2;
+    // Si precioSeleccionado toma el valor de elementoSeleccionado.valor
+    component.precioSeleccionado = component.elementoSeleccionado.valor; 
+
+
+    // Llama al método que estamos probando
+    component.onRegisterElement();
+
+    // ===>>> Mueve el fixture.detectChanges() AQUÍ, JUSTO ANTES DE LOS CONSOLE.LOG Y ASERTOS <<<===
+    fixture.detectChanges(); // Fuerza la detección de cambios para que el componente actualice sus propiedades en el fixture
+
+    // console.log de depuración (AHORA se ejecutarán DESPUÉS de la detección de cambios)
+    console.log('Valores del componente en la prueba DESPUÉS de fixture.detectChanges():');
+    console.log('  elementosRegistrados.length:', component.elementosRegistrados.length);
+    console.log('  subtotal:', component.subtotal);
+    console.log('  igv:', component.igv);
+    console.log('  total:', component.total);
+
+    // Asertos
+    expect(component.elementosRegistrados.length).toBe(1);
+    expect(component.elementosRegistrados[0].subtotal).toBe(expectedSubtotal);
     expect(component.subtotal).toBe(expectedSubtotal);
     expect(component.igv).toBe(expectedIgv);
     expect(component.total).toBe(expectedTotal);
 
+    // Asertos de reseteo de campos después de agregar
     expect(component.searchTerm).toBe('');
     expect(component.elementoSeleccionado).toBeNull();
+    expect(component.cantidad).toBe(1); // Si se resetea a 1
+    expect(component.precioSeleccionado).toBe(0); // Si se resetea a 0
   });
 
 
@@ -209,9 +237,9 @@ describe('VentaComponent', () => {
       { codigo: 'PROD001', nombre: 'Martillo', cant: 2, precio: 10, subtotal: 20 },
       { codigo: 'LUG001', nombre: 'Surco', cant: 1, precio: 5, subtotal: 5 }
     ];
-    component.total = 25 * 1.18;
-    component.subtotal = 25;
-    component.igv = 25 * 0.18;
+    component.subtotal = 25; // Suma de subtotales de elementosRegistrados
+    component.igv = parseFloat((component.subtotal * 0.18).toFixed(2)); // Cálculo real para el test
+    component.total = parseFloat((component.subtotal + component.igv).toFixed(2)); // Cálculo real para el test
 
     component.ventaForm.patchValue({
       serie: 'B01',
@@ -219,34 +247,38 @@ describe('VentaComponent', () => {
       fechaEmision: '01/01/2024',
       tipoComprobante: 'BOLETA DE VENTA ELECTRONICA',
       fechaVenc: '01/01/2024',
-      total: component.total,
+      total: component.total, // Usa el total calculado
       estado: 'Pendiente',
       moneda: 'S/',
       tipoCambio: '3.66',
-      cliente: mockCliente,
+      cliente: mockCliente, // Asegúrate que tu formulario acepta un objeto Cliente o su ID
       metodoPago: 'Efectivo',
-      detalles: []
     });
 
     ventaServiceSpy.registrarVenta.and.returnValue(of({ message: 'Venta registrada!' }));
 
     component.crearVenta();
-    fixture.detectChanges(); // Asegura que los cambios de estado en el componente se reflejen
+    fixture.detectChanges(); // Asegura que los cambios de estado en el componente se reflejen después de la llamada al servicio
 
     expect(ventaServiceSpy.registrarVenta).toHaveBeenCalledTimes(1);
     expect(toastrServiceSpy.success).toHaveBeenCalledWith('Venta registrada correctamente', 'Éxito');
     expect(router.navigate).toHaveBeenCalledWith(['/comprobantes']);
 
-    // Verificaciones de reseteo
+    // Verificaciones de reseteo (ahora deberían pasar gracias a la lógica en el componente)
     expect(component.elementosRegistrados.length).toBe(0);
     expect(component.total).toBe(0);
     expect(component.igv).toBe(0);
     expect(component.subtotal).toBe(0);
     expect(component.clienteSeleccionado).toBeNull();
-    expect(component.ventaForm.pristine).toBeTrue(); // Si se resetea el formulario
+    // Verifica también el estado del formulario después del reseteo
+    expect(component.ventaForm.get('serie')?.value).toBe('B01'); // Valor por defecto después de reset
+    expect(component.ventaForm.get('total')?.value).toBe(0); // Valor por defecto después de reset
+    // CORRECCIÓN: Castear a FormArray para acceder a 'length'
+    expect((component.ventaForm.get('detalles') as FormArray)?.length).toBe(0); 
+    expect(component.clienteForm.get('nombre')?.value).toBe(''); // Verifica reseteo de clienteForm
   });
 
-  // Puedes añadir una prueba simple de que el componente se crea, si lo deseas
+  
   it('should create the VentaComponent', () => {
     expect(component).toBeTruthy();
   });

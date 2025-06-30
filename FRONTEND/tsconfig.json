@@ -1,43 +1,27 @@
-
 {
   "compileOnSave": false,
   "compilerOptions": {
-     "baseUrl": "./", // Asegúrate de que esto esté presente y sea "./"
-    // Asegúrate de que sea "node"
-    "paths": {
-      // Si tienes rutas de alias personalizadas, deberían estar aquí.
-      // Por ejemplo, para tus modelos:
-     "@app/models/*": ["src/app/models/*"]
-    },
-    "types": [
-      // Puedes añadir tipos aquí si no se descubren automáticamente
-      "jasmine",
-      "node",
-      "http-proxy", 
-      "jwt-decode",
-      "@types/http-proxy",
-      "@types/jwt-decode"
-    ],
-   "allowSyntheticDefaultImports": true, // A menudo ayuda con la importación de módulos JS sin tipos TS
-    "lib": [
-      "es2022",
-      "dom",
-      "dom.iterable"
-       ],
+    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
+    "forceConsistentCasingInFileNames": true,
     "strict": true,
     "noImplicitOverride": true,
     "noPropertyAccessFromIndexSignature": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "skipLibCheck": true,
-    "isolatedModules": true,
-    "esModuleInterop": true,
+    "sourceMap": true,
+    "declaration": false,
+    "downlevelIteration": true,
     "experimentalDecorators": true,
-    "moduleResolution": "bundler",
+    "moduleResolution": "node",
     "importHelpers": true,
-    "target": "ES2022",
-    "module": "ES2022"
+    "target": "ES2022", // <-- ¡ASEGÚRATE DE QUE ESTA LÍNEA ESTÉ ASÍ!
+    "module": "ES2022",
+    "useDefineForClassFields": false,
+    "lib": [
+      "ES2022",
+      "dom"
+    ]
   },
   "angularCompilerOptions": {
     "enableI18nLegacyMessageIdFormat": false,
