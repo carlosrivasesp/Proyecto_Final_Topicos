@@ -31,7 +31,7 @@ describe('SalidaProductosComponent', () => {
     component = fixture.componentInstance;
   });
 
-  fit('debería obtener las salidas correctamente', () => {
+  it('debería obtener las salidas correctamente', () => {
     const salidasMock = [
       { tipoOperacion: 'Venta Registrada', ventaId: { nroComprobante: 'F001-123' }, fechaSalida: new Date() }
     ];

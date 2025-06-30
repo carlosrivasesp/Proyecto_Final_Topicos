@@ -77,7 +77,7 @@ describe('CotizacionesComponent', () => {
   });
 
   //prueba unitaria 'fit' para que se realice solo esa prueba
-  fit('debe llamar al servicio registrarCotizacion cuando se hace click en el botón', () => {
+  it('debe llamar al servicio registrarCotizacion cuando se hace click en el botón', () => {
     // simula que el usuario ya agregó un producto para realizar la cotizacion
     component.elementosRegistrados = [{
       codigo: '001',

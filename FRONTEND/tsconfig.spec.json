@@ -5,9 +5,16 @@
   "compilerOptions": {
     "outDir": "./out-tsc/spec",
     "types": [
-      "jasmine"
-    ]
+      "jasmine",
+       "node",
+      "chrome"
+    ],
+     "esModuleInterop": true, // También aquí
+    "allowSyntheticDefaultImports": true
   },
+  "files": [
+    "src/test.ts" // Asegúrate de que test.ts esté aquí como un archivo raíz
+  ],
   "include": [
     "src/**/*.spec.ts",
     "src/**/*.d.ts"

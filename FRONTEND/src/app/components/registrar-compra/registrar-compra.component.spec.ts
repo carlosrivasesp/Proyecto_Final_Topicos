@@ -42,7 +42,7 @@ describe('RegistrarCompraComponent', () => {
     fixture.detectChanges();
   });
 
-  fit('debería calcular correctamente el IGV y el total', () => {
+   it('debería calcular correctamente el IGV y el total', () => {
     // Simulamos productos registrados
     component.elementosRegistrados = [
       {

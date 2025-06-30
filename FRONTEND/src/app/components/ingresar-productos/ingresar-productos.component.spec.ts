@@ -32,7 +32,7 @@ describe('IngresarProductosComponent', () => {
     component = fixture.componentInstance;
   });
 
-  fit('debería obtener los ingresos correctamente y asignar listIngresos', () => {
+   it('debería obtener los ingresos correctamente y asignar listIngresos', () => {
     const ingresosMock = [
       {
         tipoOperacion: 'Compra registrada',
@@ -77,7 +77,7 @@ describe('IngresarProductosComponent', () => {
       ];
     });
 
-    fit('filtra por tipoOperacion', () => {
+     it('filtra por tipoOperacion', () => {
       component.selectedFilter = 'tipoOperacion';
       component.searchTerm = 'compra';
 
@@ -89,7 +89,7 @@ describe('IngresarProductosComponent', () => {
       expect(filtered[0].tipoOperacion).toBe('Compra registrada');
     });
 
-    fit('retorna toda la lista si searchTerm vacío', () => {
+     it('retorna toda la lista si searchTerm vacío', () => {
       component.selectedFilter = 'tipoOperacion';
       component.searchTerm = '';
 
