@@ -15,6 +15,7 @@ export class ListaComprobantesComponent implements OnInit {
   listVentas: Venta[] = [];
   idVenta: string | null;
   ventaForm: FormGroup;
+  enviarForm: FormGroup;
   selectedVenta: any = null;
   selectedFilter: string = 'cliente';
   searchTerm: string = '';
@@ -45,6 +46,11 @@ export class ListaComprobantesComponent implements OnInit {
     });
     
     this.idVenta = this.aRoute.snapshot.paramMap.get('id');
+
+    this.enviarForm = this.fb.group({
+      nombreCliente: ['', Validators.required],
+      celular: ['', [Validators.required, Validators.pattern(/^\d{9}$/)]],
+    });
   }
 
   ngOnInit(): void {
@@ -63,7 +69,7 @@ export class ListaComprobantesComponent implements OnInit {
 
   editarVenta(Venta: Venta) {
     this.idVenta = Venta._id || null;
-    this.selectedVenta = `${Venta.serie}-${Venta.nroComprobante}`;
+this.selectedVenta = `${Venta.serie}-${Venta.nroComprobante}`; // Usar comillas invertidas ` `
     this.ventaForm.patchValue({
       estado: Venta.estado,
       metodoPago: Venta.metodoPago
@@ -117,30 +123,6 @@ export class ListaComprobantesComponent implements OnInit {
       }
     });
   }
-
-  VentaADevolver: any; 
-
-  setVentaADevolver(venta: any): void {
-    this.VentaADevolver = venta;
-  }
-
-  devolverVenta(venta: Venta): void {  
-    const ventaActualizada = {
-      ...venta,
-      estado: 'Devolución'
-    };
-  
-    this._ventaService.editarVenta(venta._id!, ventaActualizada).subscribe({
-      next: () => {
-        this.toastr.info('Comprobante modificado correctamente', 'Devolución');
-        this.obtenerVentas();
-      },
-      error: (error) => {
-        console.error(error);
-        this.toastr.error('No se pudo modificar el comprobante', 'Error');
-      }
-    });
-  }
   
 
   get filteredVentas(): Venta[] {
@@ -158,10 +140,6 @@ export class ListaComprobantesComponent implements OnInit {
             ? this.formatDate(s.fechaEmision).includes(term)
             : false
         );
-      case 'estado':
-        return this.listVentas.filter((v) =>
-          v.estado.toLowerCase().includes(term)
-        );
       default:
         return this.listVentas;
     }
@@ -172,7 +150,7 @@ export class ListaComprobantesComponent implements OnInit {
     const day = String(d.getDate()).padStart(2, '0');
     const month = String(d.getMonth() + 1).padStart(2, '0'); // Los meses van de 0 a 11
     const year = d.getFullYear();
-    return `${day}/${month}/${year}`;
+return `${day}/${month}/${year}`; // Usar comillas invertidas ` `
   }
 
   get paginatedVentas(): Venta[] {
@@ -188,5 +166,38 @@ export class ListaComprobantesComponent implements OnInit {
     if (page >= 1 && page <= this.totalPages) {
       this.currentPage = page;
     }
+  }
+
+  ventaParaEnviarId: string | null = null;
+
+  abrirModalEnviar(venta: Venta): void {
+    this.ventaParaEnviarId = venta._id || null;
+    this.enviarForm.patchValue({
+      nombreCliente: venta.cliente?.nombre || '',
+      celular: venta.cliente?.telefono || '',
+    });
+  }
+
+  enviar(): void {
+    if (this.enviarForm.invalid || !this.ventaParaEnviarId) {
+      this.toastr.warning('Completa correctamente el formulario');
+      return;
+    }
+
+    const { nombreCliente, celular } = this.enviarForm.value;
+
+    this._ventaService
+      .enviarComprobante(this.ventaParaEnviarId, nombreCliente, celular)
+      .subscribe({
+        next: (res: any) => {
+          this.toastr.success(res.mensaje || 'Comprobante enviado por WhatsApp');
+          this.enviarForm.reset();
+          this.ventaParaEnviarId = null;
+        },
+        error: (err) => {
+          console.error(err);
+          this.toastr.error(err.error?.mensaje || 'Error al enviar comprobante');
+        },
+      });
   }
 }

@@ -1,3 +1,4 @@
+
 <app-header />
 <app-sidebar />
 
@@ -28,11 +29,6 @@
                 >Fecha</a
               >
             </li>
-            <li>
-              <a class="dropdown-item" (click)="selectedFilter = 'estado'"
-                >Estado</a
-              >
-            </li>
           </ul>
         </div>
       </div>
@@ -53,15 +49,15 @@
     <table class="table">
       <thead>
         <tr class="header">
-          <th scope="col" style="width: 200px;">Tipo de comprobante</th>
-          <th scope="col" style="width: 100px;">Serie</th>
-          <th scope="col" style="width: 150px;">Nro. Comprobante</th>
-          <th scope="col" style="width: 150px;">Cliente</th>
-          <th scope="col" style="width: 150px;">Fecha de emisión</th>
-          <th scope="col" style="width: 150px;">Método de pago</th>
-          <th scope="col" style="width: 100px;">Total</th>
-          <th scope="col" style="width: 100px;">Estado</th>
-          <th scope="col" style="width: 80px;">Acciones</th>
+          <th scope="col" style="width: 200px">Tipo de comprobante</th>
+          <th scope="col" style="width: 100px">Serie</th>
+          <th scope="col" style="width: 150px">Nro. Comprobante</th>
+          <th scope="col" style="width: 150px">Cliente</th>
+          <th scope="col" style="width: 150px">Fecha de emisión</th>
+          <th scope="col" style="width: 150px">Método de pago</th>
+          <th scope="col" style="width: 100px">Total</th>
+          <th scope="col" style="width: 100px">Estado</th>
+          <th scope="col" style="width: 80px">Acciones</th>
         </tr>
       </thead>
       <tbody class="body">
@@ -78,7 +74,7 @@
             }}
           </td>
           <td>{{ venta.metodoPago }}</td>
-          <td>{{venta.moneda}} {{ venta.total.toFixed(2) }}</td>
+          <td>{{ venta.moneda }} {{ venta.total.toFixed(2) }}</td>
           <td>{{ venta.estado }}</td>
           <td>
             <a
@@ -104,7 +100,7 @@
                   data-bs-toggle="modal"
                   data-bs-target="#modalEdit"
                   (click)="editarVenta(venta)"
-                  *ngIf="venta.estado === 'Pendiente' "
+                  *ngIf="venta.estado === 'Pendiente'"
                   >Editar</a
                 >
               </li>
@@ -114,7 +110,7 @@
                   data-bs-toggle="modal"
                   data-bs-target="#modalDelete"
                   (click)="setVentaAAnular(venta)"
-                  *ngIf="venta.estado !== 'Anulado' && venta.estado !== 'Devolución'"
+                  *ngIf="venta.estado !== 'Anulado'"
                   >Anular</a
                 >
               </li>
@@ -122,10 +118,9 @@
                 <a
                   class="dropdown-item"
                   data-bs-toggle="modal"
-                  data-bs-target="#modalDevolver"
-                  (click)="setVentaADevolver(venta)"
-                  *ngIf="venta.estado == 'Registrado'"
-                  >Devolución</a
+                  data-bs-target="#modalEnviarComprobante"
+                  (click)="abrirModalEnviar(venta)"
+                  >Enviar</a
                 >
               </li>
             </ul>
@@ -259,44 +254,69 @@
       </div>
     </div>
 
-    <!-- MODAL DEVOLVER -->
+    <!-- MODAL ENVIAR COMPROBANTE -->
 
     <div
       class="modal fade"
-      id="modalDevolver"
+      id="modalEnviarComprobante"
       tabindex="-1"
-      aria-labelledby="modalDevolver"
+      aria-labelledby="modalEnviarComprobanteLabel"
       aria-hidden="true"
     >
       <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-          <div class="modal-body">
-            <form>
+          <div class="modal-header">
+            <h5 class="modal-title" id="modalEnviarComprobanteLabel">
+              Enviar Comprobante
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Cerrar"
+            ></button>
+          </div>
+          <form [formGroup]="enviarForm" (ngSubmit)="enviar()">
+            <div class="modal-body">
               <div class="mb-3">
-                <p>¿Estás seguro que deseas modificar el comprobante a devolución?</p>
+                <label for="nombreCliente" class="form-label"
+                  >Nombre del Cliente</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="nombreCliente"
+                  formControlName="nombreCliente"
+                  required
+                />
               </div>
-            </form>
-          </div>
-          <div class="modal-footer">
-            <button
-              type="button"
-              class="btn btn-secondary"
-              data-bs-dismiss="modal"
-            >
-              No
-            </button>
-            <button
-              type="button"
-              class="btn btn-danger"
-              data-bs-dismiss="modal"
-              (click)="devolverVenta(VentaADevolver)"
-            >
-              Sí, modificar
-            </button>
-          </div>
+              <div class="mb-3">
+                <label for="celular" class="form-label">Celular</label>
+                <input
+                  type="tel"
+                  class="form-control"
+                  id="celular"
+                  formControlName="celular"
+                  required
+                  pattern="[0-9]{9}"
+                />
+              </div>
+            </div>
+            <div class="modal-footer">
+              <button
+                type="button"
+                class="btn btn-secondary"
+                data-bs-dismiss="modal"
+              >
+                Cancelar
+              </button>
+              <button type="submit" class="btn btn-success btn-sm" data-bs-dismiss="modal">
+                Enviar
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
-
   </div>
 </main>

@@ -33,4 +33,10 @@ export class VentaService {
           return this.http.put<Venta>(direccionUrl + '/' + id, venta)
  }
  
+enviarComprobante(id: string, nombreCliente: string, celular: string): Observable<any>{
+        let direccionUrl = this.url + 'wsp/envio';
+        return this.http.post<Venta>(direccionUrl + '/' + id, { nombreCliente, celular })
+
+ }
+
 }
