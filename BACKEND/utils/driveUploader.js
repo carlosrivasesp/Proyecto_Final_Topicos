@@ -3,7 +3,7 @@ const path = require('path');
 const { google } = require('googleapis');
 
 const KEYFILEPATH = path.join(__dirname, '../config/credentials.json'); // Ajusta la ruta
-const SCOPES = ['https://www.googleapis.com/auth/drive'];
+const SCOPES = [process.env.SCOPES];
 
 const auth = new google.auth.GoogleAuth({
   keyFile: KEYFILEPATH,
