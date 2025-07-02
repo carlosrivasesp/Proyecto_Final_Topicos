@@ -1,4 +1,4 @@
-name: Test Angular y Backend (sin despliegue)
+name: Test Angular y Backend
 
 on:
   push:
