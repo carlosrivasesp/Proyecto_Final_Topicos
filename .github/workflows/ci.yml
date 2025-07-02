@@ -45,4 +45,4 @@ jobs:
         run: |
           curl -X POST ${{ secrets.ZAPIER_WEBHOOK_URL }} \
           -H "Content-Type: application/json" \
-          -d '{"cliente":"Juan Pérez", "comprobante":"boleta-001.pdf"}
+          -d '{"cliente":"Juan Pérez", "comprobante":"boleta-001.pdf"}'
