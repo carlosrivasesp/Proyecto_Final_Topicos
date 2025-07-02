@@ -44,6 +44,7 @@ app.use('/api/obtenerProdProv', productos);
 
 //ventas
 app.use('/api/registrarVenta', ventas);
+app.use('/api/wsp', ventas);
 app.use('/api/obtenerVentas', ventas);
 app.use('/api/obtenerDetallesVenta', ventas);
 app.use('/api/obtenerVenta', ventas);

@@ -8,7 +8,7 @@ import { Producto } from "../models/producto";
 })
 export class ProductoService {
 
-    url = 'https://deploy-server-ferretechsc.onrender.com/api/';
+    url = 'http://localhost:4000/api/';
 
     constructor(private http: HttpClient) { }
 

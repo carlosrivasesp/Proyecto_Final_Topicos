@@ -8,7 +8,7 @@ import { Proveedor } from "../models/proveedor";
 })
 export class ProveedorService {
 
-    url= 'https://deploy-server-ferretechsc.onrender.com/api/';
+    url= 'http://localhost:4000/api/';
 
     constructor(private http: HttpClient) { }
 

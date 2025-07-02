@@ -9,7 +9,7 @@ import { DetalleCotizacion } from '../models/detalleCotizacion';
 })
 export class CotizacionService {
 
-  private url = 'https://deploy-server-ferretechsc.onrender.com/api/';  // URL de la API de cotización
+  private url = 'http://localhost:4000/api/';  // URL de la API de cotización
 
   constructor(private http: HttpClient) {}
 

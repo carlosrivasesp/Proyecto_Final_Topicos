@@ -8,7 +8,7 @@ import { Compra } from '../models/compra';
 })
 export class CompraService {
 
-  private url = 'https://deploy-server-ferretechsc.onrender.com/api/';
+  private url = 'http://localhost:4000/api/';
 
   constructor(private http: HttpClient) {}
 

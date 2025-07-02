@@ -9,16 +9,16 @@ import { HttpClient } from '@angular/common/http';
 })
 export class ReportesComponent {
 
-  private urlProductos = 'https://deploy-server-ferretechsc.onrender.com/api/exportarProductos';
-  private urlLugares = 'https://deploy-server-ferretechsc.onrender.com/api/exportarLugares';
-  private urlComprobantes = 'https://deploy-server-ferretechsc.onrender.com/api/ventas';
-  private urlEntregas = 'https://deploy-server-ferretechsc.onrender.com/api/exportarEntregas';
-  private urlClientes = 'https://deploy-server-ferretechsc.onrender.com/api/exportarClientes';
-  private urlCotizaciones = 'https://deploy-server-ferretechsc.onrender.com/api/exportarCotizacion';
+  private urlProductos = 'http://localhost:4000/api/exportarProductos';
+  private urlLugares = 'http://localhost:4000/api/exportarLugares';
+  private urlComprobantes = 'http://localhost:4000/api/ventas';
+  private urlEntregas = 'http://localhost:4000/api/exportarEntregas';
+  private urlClientes = 'http://localhost:4000/api/exportarClientes';
+  private urlCotizaciones = 'http://localhost:4000/api/exportarCotizacion';
 
 
-  private urlCompras = 'https://deploy-server-ferretechsc.onrender.com/api/exportarCompras';
-  private urlComprasSugeridas = 'https://deploy-server-ferretechsc.onrender.com/api/comprasSugeridas';
+  private urlCompras = 'http://localhost:4000/api/exportarCompras';
+  private urlComprasSugeridas = 'http://localhost:4000/api/comprasSugeridas';
 
   constructor(private http: HttpClient) {}
 
