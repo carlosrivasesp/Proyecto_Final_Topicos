@@ -4,6 +4,7 @@ const ventaController = require('../controllers/ventaController');
 const detalleVentaController = require('../controllers/detalleventaController');
 
 router.post('/', ventaController.registrarVenta);
+router.post('/envio/:id', ventaController.enviarComprobantePorWhatsapp);
 router.get('/', ventaController.obtenerVentas);
 router.get('/detalles', detalleVentaController.obtenerDetallesVenta);
 
