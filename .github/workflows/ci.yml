@@ -53,4 +53,4 @@ jobs:
         env:
           ACC_SSID: ${{ secrets.ACC_SSID }}
           AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
-        run: node utils/enviarWhatsapp.js
+        run: node utils/enviarWsp.js
