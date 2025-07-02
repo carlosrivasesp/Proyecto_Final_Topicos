@@ -32,3 +32,17 @@ jobs:
       - name: Instalar dependencias Backend
         working-directory: BACKEND
         run: npm ci
+
+       # Subir comprobante PDF a Google Drive
+      - name: Subir PDF a Google Drive
+        working-directory: BACKEND
+        env:
+          DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
+        run: node utils/driveUploader.js
+
+      # Notificar a Zapier
+      - name: Notificar a Zapier
+        run: |
+          curl -X POST ${{ secrets.ZAPIER_WEBHOOK_URL }} \
+          -H "Content-Type: application/json" \
+          -d '{"cliente":"Juan Pérez", "comprobante":"boleta-001.pdf"}
