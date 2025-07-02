@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 20
 
-      # FRONTEND (Angular)
+      #FRONTEND (Angular)
       - name: Instalar dependencias Angular
         working-directory: FRONTEND
         run: npm ci
@@ -28,21 +28,29 @@ jobs:
         working-directory: FRONTEND
         run: npm run test -- --watch=false --browsers=ChromeHeadless
 
-      # BACKEND (Node/Express)
+      #BACKEND (Node/Express)
       - name: Instalar dependencias Backend
         working-directory: BACKEND
         run: npm ci
 
-       # Subir comprobante PDF a Google Drive
+       #Subir comprobante PDF a Google Drive
       - name: Subir PDF a Google Drive
         working-directory: BACKEND
         env:
           DRIVE_FOLDER_ID: ${{ secrets.DRIVE_FOLDER_ID }}
         run: node utils/driveUploader.js
 
-      # Notificar a Zapier
+      #Notificar a Zapier
       - name: Notificar a Zapier
         run: |
           curl -X POST ${{ secrets.ZAPIER_WEBHOOK_URL }} \
           -H "Content-Type: application/json" \
           -d '{"cliente":"Juan Pérez", "comprobante":"boleta-001.pdf"}'
+
+      #Enviar a WhatsApp
+      - name: Enviar WhatsApp
+        working-directory: BACKEND
+        env:
+          ACC_SSID: ${{ secrets.ACC_SSID }}
+          AUTH_TOKEN: ${{ secrets.AUTH_TOKEN }}
+        run: node utils/enviarWhatsapp.js
