@@ -1,0 +1,53 @@
+name: Test Angular y Backend (sin despliegue)
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+
+    services:
+      mongo:
+        image: mongo:6
+        ports:
+          - 27017:27017
+        options: >-
+          --health-cmd "mongosh --eval 'db.stats()'"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    steps:
+      - name: Checkout del código
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      # FRONTEND (Angular)
+      - name: Instalar dependencias Angular
+        working-directory: frontend
+        run: npm ci
+
+      - name: Ejecutar pruebas Angular
+        working-directory: frontend
+        run: npm run test -- --watch=false --browsers=ChromeHeadless
+
+      # BACKEND (Node/Express)
+      - name: Instalar dependencias Backend
+        working-directory: backend
+        run: npm ci
+
+      # Notificación opcional a Zapier o WhatsApp
+      - name: Notificación a Zapier (opcional)
+        if: success()
+        run: |
+          curl -X POST https://hooks.zapier.com/hooks/catch/YOUR_ZAP_ID/YOUR_TRIGGER_ID/ \
+          -H "Content-Type: application/json" \
+          -d '{"mensaje":"✔️ Todas las pruebas fueron exitosas en el proyecto MEAN."}'
