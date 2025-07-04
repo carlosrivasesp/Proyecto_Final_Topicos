@@ -1,79 +1,80 @@
-Proyecto Final Tópicos
-Este proyecto es una aplicación web completa que consta de un Backend (servidor) y un Frontend (interfaz de usuario).
-Estructura del Proyecto
-El proyecto está organizado en dos directorios principales:
-BACKEND/: Contiene la lógica del servidor, la API y la interacción con la base de datos.
-FRONTEND/: Contiene la aplicación web desarrollada con Angular.
-Requisitos Previos
-Asegúrate de tener instalados los siguientes programas en tu sistema:
-Node.js: Se recomienda la versión v18.x para compatibilidad con todas las dependencias. Puedes descargarlo desde nodejs.org.
-npm (Node Package Manager): Viene incluido con Node.js.
-Angular CLI: Necesario para desarrollar y ejecutar la aplicación Frontend. Si no lo tienes, instálalo globalmente:
-npm install -g @angular/cli
+# Proyecto FerreTechSC
+Este repositorio contiene una aplicación web desarrollada con el stack **MEAN (MongoDB, Express, Angular y Node.js)**. El sistema está integrado con servicios externos como **Google Drive**, **Twilio WhatsApp**, y **Zapier**, y cuenta con un pipeline de **Integración Continua (CI)** y **Despliegue Continuo (CD)** a través de **GitHub Actions**.
 
+## 🚀 Funcionalidades principales
 
-Git: Para la gestión de versiones del código.
-Configuración y Ejecución del Proyecto
-Sigue estos pasos para poner en marcha tanto el Backend como el Frontend:
-1. Backend
-Navega al directorio del Backend:
-cd BACKEND/
+- Registro y gestión de comprobantes en PDF
+- Envío de comprobantes vía WhatsApp usando Twilio
+- Subida de comprobantes a una carpeta en Google Drive
+- Registro automático en Google Sheets vía Zapier para comprobantes enviados por WhatsApp
+- Pruebas unitarias en Angular
+- Automatización con GitHub Actions (CI)
+- Despliegue continuo del backend y/o frontend (CD)
 
+## FRONTEND
+Desarrollado con Angular
+1. Redirigir a la carpeta FRONTEND con el comando *cd FRONTEND*
+2. Instalar dependecias con el comando *npm install*
+3. Instalar angular con el comando *npm install -g @angular/cli* (Opcional)
+4. Ejecutar el programa en el puerto 4200 con el comando *ng serve --o*
+### Pruebas unitarias
+1. Se realizaron pruebas unitarias a algunos de los componentes más importantes del sistema:
+   - Ventas
+   - Cotizaciones
+   - Compras
+   - Listado de Comprobantes
+   - Entregas
+   - Ingresos
+   - Salidas.
+2. Ejecutamos las pruebas unitarias con el comando *ng test*
+3. Se podrá visualizar únicamente las pruebas seleccionadas con el código *fit* en Chrome y también el LOG en la terminal.
 
-Instala las dependencias del Backend:
-npm install
+## BACKEND
+Desarrollado con NodeJS y Express.
+1. Redirigir a la carpeta BACKEND con el comando *cd BACKEND*
+2. Instalar dependecias con el comando *npm install*
+3. Instalar librerías de pdf con el comando *npm install pdfkit moment* y *npm install moment*
+4. Instalar **fs** y **path** con los comandos *npm install fs* y *npm install path* (Opcional)
+5. Instalar dependencias para interactuar con WhatsApp con el comando *npm install twilio*
+6. Instalar dependencias para interactuar con Google Drive con el comando *npm install googleapis google-auth-library*
+7. Ejecutar el programa en el puerto 4000 con el comando *npm run dev*
+8. Es necesario ingresar las variables de entorno a un archivo .env para que se pueda ejecutar el programa.
 
-Dependencias clave del Backend:
-pdf: Para la generación de documentos PDF.
-whatsapp: Integración para el envío de mensajes (probablemente a través de un servicio como Twilio u otro proveedor de API de WhatsApp).
-Google Cloud: Para servicios en la nube (ej. almacenamiento, funciones, etc.).
-Twilio: (Mencionado como "el de whatsapp") Es un servicio de comunicación que puede ser utilizado para enviar mensajes de WhatsApp.
-Inicia el servidor Backend:
-npm run dev
+## Integración Continua (CI)
 
-El servidor se iniciará y estará escuchando en el puerto configurado (usualmente http://localhost:3000 o similar).
-2. Frontend
-Navega al directorio del Frontend:
-cd FRONTEND/
+### ¿Cuándo se ejecuta este workflow?
 
+El pipeline se ejecuta automáticamente cuando:
+- Se hace un `push` a la rama `main`
+- Se abre o actualiza un `pull request` a la rama `main`
 
-Instala las dependencias del Frontend:
-npm install
+### Pasos que realiza el workflow
 
+| Paso                         | Descripción                                                                 |
+|------------------------------|-----------------------------------------------------------------------------|
+| **Checkout del código**      | Clona el repositorio para usarlo en el runner (maquina virtual)            |
+| **Configurar Node.js**       | Usa NodeJS v20 como entorno de ejecución                                  |
+| **Instalar Angular**         | Instala dependencias en `FRONTEND/` usando `npm ci`                        |
+| **Test Angular**             | Ejecuta pruebas unitarias de Angular con Karma y ChromeHeadless            |
+| **Instalar Backend**         | Instala dependencias en `BACKEND/` usando `npm ci`                         |
+| **Subir PDF a Drive**        | Usa `utils/driveUploader.js` para subir un comprobante a Google Drive      |
+| **Notificar a Zapier**       | Envia un POST con datos del comprobante a un webhook de Zapier             |
+| **Enviar mensaje por WhatsApp** | Ejecuta `utils/enviarWsp.js` para mandar el comprobante vía Twilio WhatsApp |
 
-Inicia la aplicación Frontend:
-ng serve --open
+---
 
-Esto compilará la aplicación y la abrirá automáticamente en tu navegador predeterminado (usualmente http://localhost:4200).
-Pruebas Unitarias (Frontend)
-Para ejecutar las pruebas unitarias del Frontend:
-Asegúrate de estar en el directorio FRONTEND/.
-Ejecuta el comando de pruebas:
-ng test
+## 🔐 Secrets requeridos
 
-Esto iniciará Karma (el corredor de pruebas) y ejecutará todas las pruebas unitarias definidas en tu proyecto Angular. Para ejecutar una prueba específica, puedes usar:
-ng test --watch=false --include="src/app/components/venta/venta.component.spec.ts"
+Para que el pipeline funcione correctamente, debes configurar los siguientes **Secrets** en GitHub Actions:
 
-(Reemplaza la ruta con la del archivo .spec.ts que desees probar).
-Gestión de Versiones (Git)
-Para subir tus cambios al repositorio de Git:
-Asegúrate de estar en el directorio raíz del proyecto (PROYECTO_FINAL_TOPICOS/).
-Añade tus cambios al área de preparación:
-git add .
+| Secret                  | Descripción                                               |
+|-------------------------|-----------------------------------------------------------|
+| `DRIVE_FOLDER_ID`       | ID de la carpeta de Google Drive para subir PDFs         |
+| `ZAPIER_WEBHOOK_URL`    | URL del webhook de Zapier para registrar el comprobante  |
+| `ACC_SSID`              | SID de tu cuenta de Twilio (WhatsApp API)                |
+| `AUTH_TOKEN`            | Token de autenticación de Twilio                         |
 
+Para agregarlos:
 
-Confirma tus cambios con un mensaje descriptivo:
-git commit -m "Mensaje descriptivo de tus cambios"
-
-
-Sube tus cambios al repositorio remoto:
-git push
-
-
-Ejecución de Archivos YAML (CI/CD o Configuración)
-La ejecución de archivos .yml (YAML) generalmente está asociada con:
-Configuraciones de CI/CD (Integración Continua/Despliegue Continuo): Si tienes un archivo como .github/workflows/main.yml o azure-pipelines.yml, estos son ejecutados automáticamente por plataformas como GitHub Actions, Azure DevOps, GitLab CI, etc., cuando se cumplen ciertas condiciones (ej. un git push a una rama específica). No se "corren" directamente desde la terminal como un script de Node.js.
-Archivos de configuración de Docker Compose: Si tienes un docker-compose.yml, se ejecuta con docker-compose up.
-Configuraciones de Kubernetes: Se aplican con kubectl apply -f archivo.yml.
-Para poder decirte cómo correr tu archivo YAML, necesito saber para qué se utiliza (ej. CI/CD, Docker Compose, Kubernetes, etc.) y dónde está ubicado. Si es para CI/CD, no necesitas ejecutarlo manualmente; el sistema lo hará.
-Espero que este README sea muy útil para ti y para cualquiera que necesite trabajar con tu proyecto. ¡Avísame si quieres añadir o modificar algo!
+1. Ve a tu repositorio → `Settings` → `Secrets and variables` → `Actions`
+2. Haz clic en `New repository secret` y agrega cada uno con su valor correspondiente.
