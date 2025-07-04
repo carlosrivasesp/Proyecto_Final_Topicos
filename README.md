@@ -79,3 +79,7 @@ Para agregarlos:
 
 1. Ve a tu repositorio → `Settings` → `Secrets and variables` → `Actions`
 2. Haz clic en `New repository secret` y agrega cada uno con su valor correspondiente.
+
+
+## Otros pasos
+1. Es necesario enviar el mensaje *join establish-zulu* al número de Twilio +1 (415) 523-8886 para poder recibir el comprobante.
