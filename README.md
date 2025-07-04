@@ -39,6 +39,7 @@ Desarrollado con NodeJS y Express.
 6. Instalar dependencias para interactuar con Google Drive con el comando *npm install googleapis google-auth-library*
 7. Ejecutar el programa en el puerto 4000 con el comando *npm run dev*
 8. Es necesario ingresar las variables de entorno a un archivo .env para que se pueda ejecutar el programa.
+9. Asimismo es necesario ingresar el archivo credentials.json, obtenido de Google Cloud.
 
 ## Integración Continua (CI)
 
