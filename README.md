@@ -1,5 +1,5 @@
 # Proyecto FerreTechSC
-Este repositorio contiene una aplicación web desarrollada con el stack **MEAN (MongoDB, Express, Angular y Node.js)**. El sistema está integrado con servicios externos como **Google Drive**, **Twilio WhatsApp**, y **Zapier**, y cuenta con un pipeline de **Integración Continua (CI)** y **Despliegue Continuo (CD)** a través de **GitHub Actions**.
+Este repositorio contiene una aplicación web desarrollada con el stack **MEAN (MongoDB, Express, Angular y Node.js)**. El sistema está integrado con servicios externos como **Google Drive**, **Twilio WhatsApp**, y **Zapier**, y cuenta con un pipeline de **Integración Continua (CI)** a través de **GitHub Actions**.
 
 ## 🚀 Funcionalidades principales
 
