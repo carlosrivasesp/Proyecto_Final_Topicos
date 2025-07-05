@@ -10,6 +10,8 @@ const generarPDFVenta = async (venta, detalles, cliente, filePath) => {
 
     doc.pipe(stream);
 
+    doc.fontSize(25).text('Ferreteria Santo Cristo', { align: 'center' });
+
     doc.fontSize(20).text('Comprobante de Venta', { align: 'center' });
     doc.moveDown();
 
